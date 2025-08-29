@@ -2,7 +2,7 @@
 import {App} from './app.js';
 
 // Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const app = new App();
-    app.init();
+    await app.init();
 });

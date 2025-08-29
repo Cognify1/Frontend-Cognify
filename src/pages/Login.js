@@ -1,4 +1,4 @@
-// Componente de la página de Login
+// Login Component
 import {AuthService} from '../services/auth.js';
 import {ValidationUtils} from '../utils/validation.js';
 import Swal from "sweetalert2";
@@ -28,7 +28,7 @@ export class LoginPage {
                 <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                         <form id="login-form" class="space-y-6">
-                            <!-- Campo Email -->
+                            <!-- Email -->
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700">
                                     Correo electrónico
@@ -50,7 +50,7 @@ export class LoginPage {
                                 <div id="email-error" class="text-red-600 text-sm mt-1 hidden"></div>
                             </div>
 
-                            <!-- Campo Password -->
+                            <!-- Password -->
                             <div>
                                 <label for="password" class="block text-sm font-medium text-gray-700">
                                     Contraseña
@@ -76,7 +76,7 @@ export class LoginPage {
                                 <div id="password-error" class="text-red-600 text-sm mt-1 hidden"></div>
                             </div>
 
-                            <!-- Botón Submit -->
+                            <!-- Submit -->
                             <div>
                                 <button
                                     type="submit"
@@ -103,10 +103,10 @@ export class LoginPage {
         const togglePassword = document.getElementById('toggle-password');
         const passwordInput = document.getElementById('password');
 
-        // Envío del formulario
+        // Send form
         form.addEventListener('submit', this.handleSubmit.bind(this));
 
-        // Mostrar/ocultar contraseña
+        // Show/hide password
         togglePassword.addEventListener('click', () => {
             passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
 
@@ -115,7 +115,7 @@ export class LoginPage {
             icon.classList.toggle('fa-eye-slash');
         });
 
-        // Validación en tiempo real
+        // Validation
         document.getElementById('email').addEventListener('blur', this.validateEmail.bind(this));
         document.getElementById('password').addEventListener('blur', this.validatePassword.bind(this));
     }
@@ -151,7 +151,7 @@ export class LoginPage {
     async handleSubmit(e) {
         e.preventDefault();
 
-        // Validar formulario
+        // Validate form
         const isEmailValid = this.validateEmail();
         const isPasswordValid = this.validatePassword();
 
@@ -172,7 +172,7 @@ export class LoginPage {
         try {
             await this.authService.login(loginData);
 
-            // Mensaje de éxito
+            // Success message
             await Swal.fire({
                 title: '¡Éxito!',
                 text: '¡Logueado exitosamente!',
@@ -181,7 +181,7 @@ export class LoginPage {
                 showConfirmButton: false
             });
 
-            // Redirigir al inicio o dashboard
+            // Redirect to home after a short delay
             setTimeout(() => {
                 window.location.hash = '/';
             }, 1500);

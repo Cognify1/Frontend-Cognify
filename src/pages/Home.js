@@ -1,4 +1,4 @@
-// Componente de la página de Inicio
+// Home component
 export class HomePage {
     constructor() {
         this.container = document.getElementById('main-content');
@@ -7,7 +7,7 @@ export class HomePage {
     render() {
         this.container.innerHTML = `
             <div class="bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 min-h-screen">
-                <!-- Sección Hero -->
+                <!-- Section Hero -->
                 <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                     <div class="text-center">
                         <!-- Badge -->
@@ -16,18 +16,18 @@ export class HomePage {
                             Plataforma de Aprendizaje con IA
                         </div>
 
-                        <!-- Título Principal -->
+                        <!-- Title -->
                         <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
                             Aprende a <span class="text-gradient-green">Programar</span> con Inteligencia Artificial
                         </h1>
 
-                        <!-- Descripción -->
+                        <!-- Description -->
                         <p class="text-lg md:text-xl text-white mb-12 max-w-3xl mx-auto">
                             Domina conceptos técnicos con explicaciones personalizadas, ejercicios prácticos y un mentor IA que se adapta a tu nivel de conocimiento.
                         </p>
                     </div>
 
-                    <!-- Grid de Características -->
+                    <!-- Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
                         <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:border-white/60">
                             <div class="bg-blue-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">

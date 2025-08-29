@@ -24,22 +24,48 @@ export class AuthService {
         return !!this.getCurrentUser();
     }
 
-    // Login user
+        // Login user
     async login(credentials) {
         try {
+            console.log('AuthService: Attempting login with:', credentials.email);
             const response = await this.apiService.post('/auth/login', credentials);
             const userData = response.data;
+            console.log('AuthService: Login response:', userData);
 
-            // Save user to localStorage
-            localStorage.setItem('cognify_user', JSON.stringify(userData.user));
-            this.currentUser = userData.user;
+            // Validate that we have all required user data
+            if (!userData.user || !userData.user.user_id && !userData.user.id) {
+                throw new Error('Respuesta de login inválida: falta ID de usuario');
+            }
+
+            if (!userData.user.email) {
+                throw new Error('Respuesta de login inválida: falta email de usuario');
+            }
+
+            // Save user to localStorage - make sure to save all necessary data
+            const userToSave = {
+                user_id: userData.user.user_id || userData.user.id,
+                email: userData.user.email,
+                name: userData.user.name || userData.user.username,
+                token: userData.token
+            };
+
+            console.log('AuthService: Saving user data:', userToSave);
+
+            // Validate that we're saving a valid user_id
+            if (!userToSave.user_id) {
+                throw new Error('No se pudo obtener un ID válido del usuario');
+            }
+
+            localStorage.setItem('cognify_user', JSON.stringify(userToSave));
+            this.currentUser = userToSave;
 
             // Trigger auth change event
             this.triggerAuthChange();
 
             return userData;
         } catch (error) {
-            throw new Error(error.response?.data?.error || 'Error al iniciar sesión');
+            console.error('AuthService: Login error:', error);
+            throw new Error(error.response?.data?.error || error.message || 'Error al iniciar sesión');
         }
     }
 
@@ -82,15 +108,5 @@ export class AuthService {
         window.dispatchEvent(new CustomEvent('auth-changed', {
             detail: {user: this.currentUser}
         }));
-    }
-
-    // Get user role
-    getUserRole() {
-        return this.currentUser?.role || null;
-    }
-
-    // Check if a user has a specific role
-    hasRole(role) {
-        return this.getUserRole() === role;
     }
 }

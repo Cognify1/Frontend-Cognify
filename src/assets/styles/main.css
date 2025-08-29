@@ -230,3 +230,230 @@ textarea:focus {
 .hamburger-animation:hover {
     transform: scale(1.1);
 }
+
+/* Additional styles for learning components */
+
+/* Progress animations */
+.progress-bar {
+    transition: width 0.8s ease-in-out;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 50px 50px;
+    animation: move 2s linear infinite;
+}
+
+@keyframes move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+
+/* Lesson item hover effects */
+.lesson-item:hover {
+    transform: translateX(4px);
+    transition: transform 0.2s ease;
+}
+
+.lesson-item.completed {
+    background-color: #f0fdf4;
+    border-left: 4px solid #10b981;
+}
+
+/* Video player container */
+.video-container {
+    position: relative;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Sidebar scrollbar styling */
+.sidebar-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Course expansion animation */
+.lessons-list {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.lessons-list.expanded {
+    max-height: 1000px;
+}
+
+.lessons-list.collapsed {
+    max-height: 0;
+}
+
+/* Checkbox custom styling */
+.lesson-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #3b82f6;
+}
+
+.lesson-checkbox:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* Loading states */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Achievement badges */
+.achievement-badge {
+    animation: bounce-in 0.5s ease-out;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .learning-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: 200px;
+        order: 2;
+    }
+
+    .main-content {
+        order: 1;
+    }
+
+    .video-container {
+        height: 200px;
+    }
+}
+
+/* Text animations for better UX */
+.text-appear {
+    animation: text-appear 0.6s ease-out;
+}
+
+@keyframes text-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card hover effects */
+.program-card {
+    transition: all 0.3s ease;
+}
+
+.program-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Success states */
+.success-state {
+    animation: success-pulse 0.6s ease-out;
+}
+
+@keyframes success-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Focus states for accessibility */
+.lesson-item:focus,
+.course-toggle:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+    .lesson-item {
+        background-color: #374151;
+        color: #f3f4f6;
+    }
+
+    .lesson-item:hover {
+        background-color: #4b5563;
+    }
+}
