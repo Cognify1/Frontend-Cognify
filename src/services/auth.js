@@ -27,10 +27,8 @@ export class AuthService {
         // Login user
     async login(credentials) {
         try {
-            console.log('AuthService: Attempting login with:', credentials.email);
             const response = await this.apiService.post('/auth/login', credentials);
             const userData = response.data;
-            console.log('AuthService: Login response:', userData);
 
             // Validate that we have all required user data
             if (!userData.user || !userData.user.user_id && !userData.user.id) {
@@ -48,8 +46,6 @@ export class AuthService {
                 name: userData.user.name || userData.user.username,
                 token: userData.token
             };
-
-            console.log('AuthService: Saving user data:', userToSave);
 
             // Validate that we're saving a valid user_id
             if (!userToSave.user_id) {

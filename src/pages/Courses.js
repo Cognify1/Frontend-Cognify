@@ -148,7 +148,7 @@ export class CoursesPage {
                                 </a>
                             </div>
                             
-                            <!-- Progress Bar (only if user is authenticated) -->
+                            <!-- Progress Bar (only if the user is authenticated) -->
                             ${this.authService.isAuthenticated() && allLessons.length > 0 ? `
                                 <div class="mt-4">
                                     <div class="w-full bg-gray-200 rounded-full h-3">
@@ -259,7 +259,7 @@ export class CoursesPage {
                  data-lesson='${JSON.stringify(lesson)}'>
                 <div class="p-3 pl-8">
                     <div class="flex items-center space-x-3">
-                        <!-- Completion Checkbox (only if user is authenticated) -->
+                        <!-- Completion Checkbox (only if the user is authenticated) -->
                         ${this.authService.isAuthenticated() ? `
                             <label class="flex items-center cursor-pointer" onclick="event.stopPropagation()">
                                 <input type="checkbox" 
@@ -312,7 +312,7 @@ export class CoursesPage {
                             src="${lesson.video_url}" 
                             title="${lesson.title}"
                             frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
                             class="w-full h-96"
                         ></iframe>
@@ -365,7 +365,7 @@ export class CoursesPage {
             item.addEventListener('click', this.handleLessonSelect.bind(this));
         });
 
-        // Lesson checkboxes (if user is authenticated)
+        // Lesson checkboxes (if the user is authenticated)
         if (this.authService.isAuthenticated()) {
             const lessonCheckboxes = document.querySelectorAll('.lesson-checkbox, .lesson-checkbox-main');
             lessonCheckboxes.forEach(checkbox => {

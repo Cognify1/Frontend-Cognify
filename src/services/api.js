@@ -33,7 +33,7 @@ export class ApiService {
                         config.headers['X-User-Email'] = userData.email;
                     }
 
-                    // If you have JWT token
+                    // If you have a JWT token
                     if (userData.token) {
                         config.headers.Authorization = `Bearer ${userData.token}`;
                     }
@@ -85,9 +85,5 @@ export class ApiService {
 
     async delete(url, config = {}) {
         return await axios.delete(url, config);
-    }
-
-    async patch(url, data = {}, config = {}) {
-        return await axios.patch(url, data, config);
     }
 }

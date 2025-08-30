@@ -32,30 +32,20 @@ export class ProgramsPage {
 
     async loadData() {
         try {
-            console.log('ProgramsPage: Starting to load data...');
-            console.log('ProgramsPage: Current user:', this.authService.getCurrentUser());
-
             // Load programs first
-            console.log('ProgramsPage: Loading programs...');
             this.programs = await this.programService.getAllPrograms();
-            console.log('ProgramsPage: Programs loaded:', this.programs);
 
             // Load enrollments separately with error handling
-            console.log('ProgramsPage: Loading enrollments...');
             try {
                 this.enrollments = await this.programService.getUserEnrollments();
-                console.log('ProgramsPage: Enrollments loaded:', this.enrollments);
             } catch (enrollmentError) {
                 console.warn('ProgramsPage: Could not load enrollments:', enrollmentError);
-                this.enrollments = []; // Set empty array if you can't load enrollments
+                this.enrollments = []; // Set an empty array if you can't load enrollments
             }
 
             // Load progress data for enrolled programs
             if (this.enrollments.length > 0) {
-                console.log('ProgramsPage: Loading progress data...');
                 await this.loadProgressData();
-            } else {
-                console.log('ProgramsPage: No enrollments, skipping progress data');
             }
         } catch (error) {
             console.error('ProgramsPage: Error in loadData:', error);
@@ -350,7 +340,7 @@ export class ProgramsPage {
                 const enrollmentResult = await this.programService.enrollInProgram(programId);
                 console.log('ProgramsPage: Enrollment successful:', enrollmentResult);
 
-                // Show success message
+                // Show a success message
                 await Swal.fire({
                     title: '¡Inscripción exitosa!',
                     text: `Te has inscrito correctamente al programa "${programTitle}".`,

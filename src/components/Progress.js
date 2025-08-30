@@ -5,7 +5,8 @@ export class ProgressTracker {
     constructor() {
         this.courseService = new CourseService();
     }
-
+//console.log
+    //video
     // Render a progress card for a specific program
     renderProgramProgressCard(programId, lessons, progress) {
         const progressPercentage = this.courseService.calculateProgramProgress(lessons, progress);

@@ -17,10 +17,10 @@ export class ProgramService extends ApiService {
         }
     }
 
-    // Enroll user in a program
+    // Enroll a user in a program
     async enrollInProgram(programId) {
         try {
-            // Get current user to make sure we're authenticated
+            // Get the current user to make sure we're authenticated
             const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
 
             if (!currentUser.user_id) {
@@ -39,7 +39,7 @@ export class ProgramService extends ApiService {
         }
     }
 
-    // Get user enrollments - handle case when user has no enrollments
+    // Get user enrollments - handle a case when the user has no enrollments
     async getUserEnrollments() {
         try {
             const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
@@ -55,13 +55,13 @@ export class ProgramService extends ApiService {
         } catch (error) {
             console.error('ProgramService: Error fetching enrollments:', error);
 
-            // If it's a 404, user has no enrollments
+            // If it's a 404, the user has no enrollments
             if (error.response?.status === 404) {
                 console.log('ProgramService: No enrollments found (404), returning empty array');
                 return [];
             }
 
-            // If it's another error, still return empty array but log it
+            // If it's another error, still return the empty array but log it
             if (error.response?.status === 200 && !error.response.data) {
                 console.log('ProgramService: Empty enrollments response, returning empty array');
                 return [];
