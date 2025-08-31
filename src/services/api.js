@@ -1,9 +1,10 @@
+
 // API service for HTTP requests
 import axios from "axios";
 
 export class ApiService {
     constructor() {
-        this.baseURL = 'http://localhost:4000/api'; // Adjust based on your backend URL
+        this.baseURL = 'http://localhost:4000/api';
         this.setupAxiosDefaults();
     }
 
@@ -17,10 +18,22 @@ export class ApiService {
         // Request interceptor to add auth token if needed
         axios.interceptors.request.use(
             (config) => {
-                // Add an auth token if available (for future JWT implementation)
+                // Add debugging to see what user data we have
                 const user = localStorage.getItem('cognify_user');
+
                 if (user) {
                     const userData = JSON.parse(user);
+
+                    // Add user identification to requests (adjust based on your backend authentication)
+                    if (userData.user_id) {
+                        config.headers['X-User-ID'] = userData.user_id;
+                    }
+
+                    if (userData.email) {
+                        config.headers['X-User-Email'] = userData.email;
+                    }
+
+                    // If you have a JWT token
                     if (userData.token) {
                         config.headers.Authorization = `Bearer ${userData.token}`;
                     }
@@ -34,8 +47,14 @@ export class ApiService {
 
         // Response interceptor for error handling
         axios.interceptors.response.use(
-            (response) => response,
+            (response) => {
+                return response;
+            },
             (error) => {
+                console.error('API Error - Status:', error.response?.status);
+                console.error('API Error - Data:', error.response?.data);
+                console.error('API Error - Full error:', error);
+
                 if (error.response?.status === 401) {
                     // Handle unauthorized access
                     this.handleUnauthorized();
@@ -62,13 +81,5 @@ export class ApiService {
 
     async put(url, data = {}, config = {}) {
         return await axios.put(url, data, config);
-    }
-
-    async delete(url, config = {}) {
-        return await axios.delete(url, config);
-    }
-
-    async patch(url, data = {}, config = {}) {
-        return await axios.patch(url, data, config);
     }
 }

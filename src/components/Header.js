@@ -86,7 +86,7 @@ export class HeaderComponent {
     renderAuthenticatedNav() {
         return `
             <nav class="flex items-center space-x-8">
-                <a href="#/knowledge" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-lg font-bold transition-colors duration-200">
+                <a href="#/programs" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-lg font-bold transition-colors duration-200">
                     <i class="fa-solid fa-book-atlas mr-2"></i>Programas
                 </a>
                 <a href="#/terminal" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-lg font-bold transition-colors duration-200">
@@ -128,7 +128,7 @@ export class HeaderComponent {
             </div>
 
             <!-- Navigation Links -->
-            <a href="#/knowledge" class="mobile-menu-link flex items-center px-3 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors duration-200">
+            <a href="#/programs" class="mobile-menu-link flex items-center px-3 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors duration-200">
                 <i class="fa-solid fa-book-atlas mr-3 text-lg"></i>
                 Programas
             </a>

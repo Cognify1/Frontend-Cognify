@@ -1,14 +1,18 @@
-// Enrutador simple basado en hash
+// Simple hash router
 import {AuthService} from '../services/auth.js';
 import {HomePage} from '../pages/Home.js';
 import {LoginPage} from '../pages/Login.js';
 import {RegisterPage} from '../pages/Register.js';
+import {ProgramsPage} from '../pages/Programs.js';
+import {CoursesPage} from '../pages/Courses.js';
+import {ProgramService} from '../services/programService.js';
+import Swal from 'sweetalert2';
 
 export class Router {
     constructor() {
         this.authService = new AuthService();
+        this.programService = new ProgramService();
         this.routes = this.defineRoutes();
-        this.currentRoute = null;
     }
 
     defineRoutes() {
@@ -30,11 +34,15 @@ export class Router {
                 guestOnly: true,
                 title: 'Registro - Cognify'
             },
-            '/knowledge': {
-                component: 'coming-soon',
-                featureName: 'Programas',
+            '/programs': {
+                component: ProgramsPage,
                 requiresAuth: true,
                 title: 'Programas - Cognify'
+            },
+            '/courses': {
+                component: CoursesPage,
+                requiresAuth: true,
+                title: 'Cursos - Cognify'
             },
             '/terminal': {
                 component: 'coming-soon',
@@ -51,22 +59,22 @@ export class Router {
         };
     }
 
-    init() {
-        // Manejar carga inicial
-        this.handleRouteChange();
+    async init() {
+        // Handle the initial route
+        await this.handleRouteChange();
 
-        // Escuchar cambios en el hash
+        // Listen to changes in route
         window.addEventListener('hashchange', () => {
             this.handleRouteChange();
         });
 
-        // Escuchar cambios de autenticación
+        // Listen to authentication changes
         window.addEventListener('auth-changed', () => {
             this.handleRouteChange();
         });
     }
 
-    handleRouteChange() {
+    async handleRouteChange() {
         const hash = window.location.hash.slice(1) || '/';
         const route = this.routes[hash];
 
@@ -75,35 +83,55 @@ export class Router {
             return;
         }
 
-        // Verificar requerimientos de autenticación
+        // Verify auth requirements
         if (route.requiresAuth && !this.authService.isAuthenticated()) {
             this.redirect('/login');
             return;
         }
 
-        // Verificar rutas solo para invitados
+        // Verify guest routes
         if (route.guestOnly && this.authService.isAuthenticated()) {
             this.redirect('/');
             return;
         }
 
-        // Actualizar título de la página
+        // Verify enrollment if required
+        if (hash.startsWith('/courses')) {
+            try {
+                const enrollments = await this.programService.getUserEnrollments();
+                if (enrollments.length === 0) {
+                    await Swal.fire({
+                        title: 'Acceso Denegado',
+                        text: 'Debes estar inscrito en al menos un programa para ver los cursos.',
+                        icon: 'warning',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                    this.redirect('/programs');
+                    return;
+                }
+            } catch (error) {
+                console.error('Error verificando inscripciones:', error);
+                this.redirect('/');
+                return;
+            }
+        }
+
+        // Update title
         document.title = route.title;
 
-        // Renderizar el componente
+        // Render component
         this.renderRoute(route);
-        this.currentRoute = hash;
     }
 
     renderRoute(route) {
         try {
-            // Manejar páginas “próximamente”
+            // Handle pages “próximamente”
             if (route.component === 'coming-soon') {
                 this.renderComingSoon(route.featureName);
                 return;
             }
 
-            // Manejar componentes normales
+            // Handle normal components
             if (typeof route.component === 'function') {
                 const componentInstance = new route.component();
                 componentInstance.render();
@@ -120,11 +148,11 @@ export class Router {
             <div class="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div class="text-center">
                     <div class="mb-8">
-                        <i class="fa-solid fa-cog fa-spin text-6xl text-blue-600"></i>
+                        <i class="fa-solid fa-cog fa-spin text-6xl text-cyan-600"></i>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 mb-4">${featureName}</h1>
                     <p class="text-lg text-gray-600 mb-8">¡Esta función llegará pronto! Estamos trabajando para traerla para ti.</p>
-                    <a href="#/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    <a href="#/" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
                         <i class="fa-solid fa-arrow-left mr-2"></i>Volver al Inicio
                     </a>
                 </div>
@@ -142,7 +170,7 @@ export class Router {
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 mb-4">¡Ups! Algo salió mal</h1>
                     <p class="text-lg text-gray-600 mb-8">${message}</p>
-                    <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    <button onclick="location.reload()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
                         <i class="fa-solid fa-refresh mr-2"></i>Recargar Página
                     </button>
                 </div>
@@ -152,15 +180,5 @@ export class Router {
 
     redirect(path) {
         window.location.hash = path;
-    }
-
-    // Navegar programáticamente
-    navigate(path) {
-        this.redirect(path);
-    }
-
-    // Obtener ruta actual
-    getCurrentRoute() {
-        return this.currentRoute;
     }
 }
