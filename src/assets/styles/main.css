@@ -19,7 +19,6 @@
 }
 
 
-
 /* Smooth transitions */
 * {
     transition: all 0.3s ease-in-out;
@@ -32,109 +31,6 @@ select:focus,
 textarea:focus {
     outline: 2px solid #3b82f6;
     outline-offset: 2px;
-}
-
-/* Mobile menu transitions */
-.mobile-menu-transition {
-    transition: transform 0.3s ease-in-out;
-}
-
-/* Prevent scroll when mobile menu is open */
-.no-scroll {
-    overflow: hidden;
-}
-
-/* Mobile menu backdrop blur effect */
-.mobile-menu-backdrop {
-    backdrop-filter: blur(4px);
-}
-
-/* Loading animation */
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-}
-
-.pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Custom button hover effects */
-.btn-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-/* Form focus animations */
-.form-input:focus {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-/* Page transition effects */
-.page-enter {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.page-enter-active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 300ms ease-out, transform 300ms ease-out;
-}
-
-/* Error message styles */
-.error-message {
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #dc2626;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-
-/* Success message styles */
-.success-message {
-    background-color: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    color: #16a34a;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-
-/* Loading state styles */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3b82f6;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 /* Responsive design helpers */
@@ -150,62 +46,7 @@ textarea:focus {
     }
 }
 
-/* Custom animations for page elements */
-.fade-in {
-    animation: fadeIn 0.6s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.slide-in {
-    animation: slideIn 0.5s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(-100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
-
-/* Card hover effects */
-.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-/* Gradient backgrounds */
-.bg-gradient-blue {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.bg-gradient-purple {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.bg-gradient-green {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
 /* Text gradients */
-.text-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
 .text-gradient-green {
     background: linear-gradient(90deg, #083e1c, #06b6d4);
     -webkit-background-clip: text;
@@ -222,107 +63,17 @@ textarea:focus {
     }
 }
 
-/* Hamburger menu animation */
-.hamburger-animation {
-    transition: transform 0.2s ease-in-out;
-}
-
-.hamburger-animation:hover {
-    transform: scale(1.1);
-}
-
-/* Additional styles for learning components */
-
-/* Progress animations */
-.progress-bar {
-    transition: width 0.8s ease-in-out;
-}
-
-.progress-bar::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-image: linear-gradient(
-        -45deg,
-        rgba(255, 255, 255, 0.2) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.2) 75%,
-        transparent 75%,
-        transparent
-    );
-    background-size: 50px 50px;
-    animation: move 2s linear infinite;
-}
-
-@keyframes move {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 50px 50px;
-    }
-}
-
 /* Lesson item hover effects */
 .lesson-item:hover {
     transform: translateX(4px);
     transition: transform 0.2s ease;
 }
 
-.lesson-item.completed {
-    background-color: #f0fdf4;
-    border-left: 4px solid #10b981;
-}
-
-/* Video player container */
-.video-container {
-    position: relative;
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.video-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-/* Sidebar scrollbar styling */
-.sidebar-scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
 /* Course expansion animation */
 .lessons-list {
+    border-radius: 0.5rem;
     transition: all 0.3s ease;
     overflow: hidden;
-}
-
-.lessons-list.expanded {
-    max-height: 1000px;
-}
-
-.lessons-list.collapsed {
-    max-height: 0;
 }
 
 /* Checkbox custom styling */
@@ -335,22 +86,6 @@ textarea:focus {
 .lesson-checkbox:checked {
     background-color: #3b82f6;
     border-color: #3b82f6;
-}
-
-/* Loading states */
-.skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
 }
 
 /* Achievement badges */
@@ -375,70 +110,6 @@ textarea:focus {
     }
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-    .learning-layout {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        max-height: 200px;
-        order: 2;
-    }
-
-    .main-content {
-        order: 1;
-    }
-
-    .video-container {
-        height: 200px;
-    }
-}
-
-/* Text animations for better UX */
-.text-appear {
-    animation: text-appear 0.6s ease-out;
-}
-
-@keyframes text-appear {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Card hover effects */
-.program-card {
-    transition: all 0.3s ease;
-}
-
-.program-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-/* Success states */
-.success-state {
-    animation: success-pulse 0.6s ease-out;
-}
-
-@keyframes success-pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
 /* Focus states for accessibility */
 .lesson-item:focus,
 .course-toggle:focus {
@@ -446,14 +117,61 @@ textarea:focus {
     outline-offset: 2px;
 }
 
-/* Dark mode support (future enhancement) */
-@media (prefers-color-scheme: dark) {
-    .lesson-item {
-        background-color: #374151;
-        color: #f3f4f6;
+/* --- Courses Sidebar & Lessons List Improvements --- */
+.sidebar {
+    background: #f9fafb;
+    min-height: 0;
+    /* for flexbox children */
+}
+
+.lesson-item {
+    background: #fff;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* Responsive layout for sidebar and main content */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+        min-width: 0;
+        max-width: 100vw;
+        border-right: none !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        position: static !important;
     }
 
-    .lesson-item:hover {
-        background-color: #4b5563;
+    .lessons-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .flex.md\:flex-row {
+        flex-direction: column !important;
+    }
+
+    .h-screen {
+        height: auto !important;
+        min-height: 100vh;
+    }
+
+    #video-content > div {
+        min-height: 50vh;
+        height: max-content;
+    }
+
+    #video-content iframe {
+        height: 40vh;
+    }
+}
+
+/* Make sidebar scrollable on desktop if content overflows */
+@media (min-width: 769px) {
+    .sidebar {
+        position: sticky;
+        top: 5rem;
+        height: calc(100vh - 5rem);
+        overflow-y: auto;
     }
 }

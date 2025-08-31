@@ -79,10 +79,10 @@ export class CoursesPage {
 
     showLoading() {
         this.container.innerHTML = `
-            <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 flex items-center justify-center">
                 <div class="text-center">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p class="text-gray-600">Cargando cursos disponibles...</p>
+                    <div class="animate-spin rounded-full h-14 w-14 border-b-4 border-white mx-auto mb-4"></div>
+                    <p class="text-white text-xl">Cargando cursos disponibles...</p>
                 </div>
             </div>
         `;
@@ -97,7 +97,7 @@ export class CoursesPage {
                     </div>
                     <h1 class="text-2xl font-bold text-gray-900 mb-4">Error al cargar</h1>
                     <p class="text-gray-600 mb-8">${message}</p>
-                    <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    <button onclick="location.reload()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
                         <i class="fa-solid fa-refresh mr-2"></i>Reintentar
                     </button>
                 </div>
@@ -111,33 +111,23 @@ export class CoursesPage {
         const progressPercentage = this.courseService.calculateProgramProgress(allLessons, this.progress);
 
         this.container.innerHTML = `
-            <div class="min-h-screen bg-gray-50">
-                <!-- Debug Info -->
-                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 text-sm">
-                    <strong>Debug Cursos:</strong> 
-                    Cursos disponibles: ${this.courses.length} | 
-                    Lecciones totales: ${allLessons.length} | 
-                    Progreso: ${this.progress.length} items |
-                    Usuario: ${this.authService.getCurrentUser()?.user_id || 'No logueado'}
-                </div>
-
-                <div class="flex h-screen">
+            <div class="bg-gray-50">
+                <div class="flex flex-col md:flex-row mt-20">
                     <!-- Sidebar -->
-                    <div class="w-80 bg-white shadow-lg overflow-y-auto">
+                    <div id="sidebar" class="sidebar w-full md:w-80 bg-white shadow-lg overflow-y-auto border-b md:border-b-0 md:border-r border-gray-200 transition-all duration-300">
                         ${this.renderSidebar()}
                     </div>
-
                     <!-- Main Content Area -->
                     <div class="flex-1 flex flex-col">
                         <!-- Header -->
-                        <div class="bg-white shadow-sm border-b px-6 py-4">
+                        <div class="bg-white shadow-sm border-b px-4 md:px-6 py-4">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <h1 class="text-2xl font-bold text-gray-900">
-                                        <i class="fa-solid fa-book mr-3 text-blue-600"></i>
+                                        <i class="fa-solid fa-book mr-3 text-cyan-600"></i>
                                         Explorar Cursos
                                     </h1>
-                                    <p class="text-gray-600">
+                                    <p id="progress-header-text" class="text-gray-600">
                                         ${this.courses.length} cursos disponibles • 
                                         ${allLessons.length} lecciones totales
                                         ${this.authService.isAuthenticated() ? ` • Progreso: ${progressPercentage}%` : ''}
@@ -152,7 +142,7 @@ export class CoursesPage {
                             ${this.authService.isAuthenticated() && allLessons.length > 0 ? `
                                 <div class="mt-4">
                                     <div class="w-full bg-gray-200 rounded-full h-3">
-                                        <div class="bg-gradient-to-r from-blue-600 to-green-600 h-3 rounded-full transition-all duration-300" 
+                                        <div class="bg-gradient-to-r from-cyan-600 to-green-600 h-3 rounded-full transition-all duration-300" 
                                              style="width: ${progressPercentage}%"></div>
                                     </div>
                                 </div>
@@ -160,7 +150,7 @@ export class CoursesPage {
                         </div>
 
                         <!-- Video Content -->
-                        <div class="flex-1 p-6" id="video-content">
+                        <div class="flex-1 p-4 md:p-6 bg-gradient-to-br from-blue-600 via-sky-400 to-green-500" id="video-content">
                             ${this.renderDefaultContent()}
                         </div>
                     </div>
@@ -176,7 +166,7 @@ export class CoursesPage {
             return `
                 <div class="p-4">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fa-solid fa-book mr-2 text-blue-600"></i>
+                        <i class="fa-solid fa-book mr-2 text-cyan-600"></i>
                         Cursos Disponibles
                     </h2>
                     <div class="text-center py-8">
@@ -191,7 +181,7 @@ export class CoursesPage {
         return `
             <div class="p-4">
                 <h2 class="text-lg font-bold text-gray-900 mb-4">
-                    <i class="fa-solid fa-book mr-2 text-blue-600"></i>
+                    <i class="fa-solid fa-book mr-2 text-cyan-600"></i>
                     Cursos Disponibles (${this.courses.length})
                 </h2>
 
@@ -239,11 +229,12 @@ export class CoursesPage {
                 </button>
 
                 <!-- Lessons List -->
-                <div class="lessons-list ${isExpanded ? 'block' : 'hidden'}">
-                    ${courseLessons.length > 0 ? 
-                        courseLessons.map(lesson => this.renderLessonItem(lesson)).join('') :
-                        '<div class="p-4 text-center text-gray-500 text-sm">No hay lecciones disponibles para este curso</div>'
-                    }
+                <div class="lessons-list px-2 mb-1 overflow-hidden transition-all duration-300 ease-in-out" 
+                    style="max-height: ${isExpanded ? '1000px' : '0'}; opacity: ${isExpanded ? '1' : '0'};">
+                    ${courseLessons.length > 0 ?
+            courseLessons.map(lesson => this.renderLessonItem(lesson)).join('') :
+            '<div class="p-4 text-center text-gray-500 text-sm">No hay lecciones disponibles para este curso</div>'
+        }
                 </div>
             </div>
         `;
@@ -255,44 +246,37 @@ export class CoursesPage {
         const isSelected = this.currentLesson && this.currentLesson.lesson_id === lesson.lesson_id;
 
         return `
-            <div class="lesson-item border-t border-gray-100 ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'} cursor-pointer transition-colors duration-200"
-                 data-lesson='${JSON.stringify(lesson)}'>
-                <div class="p-3 pl-8">
-                    <div class="flex items-center space-x-3">
-                        <!-- Completion Checkbox (only if the user is authenticated) -->
-                        ${this.authService.isAuthenticated() ? `
-                            <label class="flex items-center cursor-pointer" onclick="event.stopPropagation()">
-                                <input type="checkbox" 
-                                       class="lesson-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                       data-lesson-id="${lesson.lesson_id}"
-                                       ${isCompleted ? 'checked' : ''}>
-                                <span class="ml-2"></span>
-                            </label>
-                        ` : `
-                            <div class="w-4 h-4 bg-blue-100 rounded flex items-center justify-center">
-                                <i class="fa-solid fa-play text-blue-600 text-xs"></i>
-                            </div>
-                        `}
-
-                        <!-- Lesson Info -->
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 truncate">${lesson.title}</p>
-                            <p class="text-xs text-gray-500">${DataUtils.formatDuration(lesson.duration)}</p>
-                        </div>
-
-                        <!-- Play Icon -->
-                        <div class="flex-shrink-0">
-                            <i class="fa-solid fa-play text-blue-600 text-sm"></i>
-                        </div>
+            <div class="lesson-item border-t border-gray-100 bg-white shadow-lg ${isSelected ? 'bg-gray-100' : 'hover:bg-gray-100'} cursor-pointer transition-colors duration-200 rounded-lg my-1"
+             data-lesson='${JSON.stringify(lesson)}'>
+            <div class="p-3 pl-6 flex items-center space-x-3">
+                ${this.authService.isAuthenticated() ? `
+                    <label class="flex items-center cursor-pointer" onclick="event.stopPropagation()">
+                        <input type="checkbox"
+                               class="lesson-checkbox rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                               data-lesson-id="${lesson.lesson_id}"
+                               ${isCompleted ? 'checked' : ''}>
+                        <span class="ml-2"></span>
+                    </label>
+                ` : `
+                    <div class="w-4 h-4 bg-cyan-100 rounded flex items-center justify-center">
+                        <i class="fa-solid fa-play text-cyan-600 text-xs"></i>
                     </div>
+                `}
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 truncate">${lesson.title}</p>
+                    <p class="text-xs text-gray-500">${DataUtils.formatDuration(lesson.duration)}</p>
+                </div>
+                <div class="flex-shrink-0">
+                    <i class="fa-solid fa-play text-cyan-600 text-sm"></i>
                 </div>
             </div>
+        </div>
         `;
     }
 
     renderDefaultContent() {
         return `
-            <div class="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+            <div class="max-w-4xl mx-auto flex items-center justify-center h-1/2 bg-gray-100 rounded-lg">
                 <div class="text-center">
                     <i class="fa-solid fa-play-circle text-6xl text-gray-400 mb-4"></i>
                     <h3 class="text-xl font-semibold text-gray-700 mb-2">Selecciona una lección para comenzar</h3>
@@ -323,7 +307,7 @@ export class CoursesPage {
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-2xl font-bold text-gray-900">${lesson.title}</h2>
-                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                        <span class="bg-gray-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-semibold">
                             ${DataUtils.formatDuration(lesson.duration)}
                         </span>
                     </div>
@@ -339,7 +323,7 @@ export class CoursesPage {
                                 <span class="text-sm text-gray-600">¿Completaste esta lección?</span>
                                 <label class="flex items-center">
                                     <input type="checkbox" 
-                                           class="lesson-checkbox-main rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2"
+                                           class="lesson-checkbox-main rounded border-gray-300 text-cyan-600 focus:ring-cyan-500 mr-2"
                                            data-lesson-id="${lesson.lesson_id}"
                                            ${this.progress.find(p => p.lesson_id === lesson.lesson_id && p.completed) ? 'checked' : ''}>
                                     <span class="text-sm font-medium text-gray-700">Marcar como completada</span>
@@ -376,17 +360,23 @@ export class CoursesPage {
 
     handleCourseToggle(event) {
         const courseId = parseInt(event.currentTarget.dataset.courseId);
+        const courseElement = event.currentTarget.closest('.border');
+        const lessonsList = courseElement.querySelector('.lessons-list');
+        const chevronIcon = courseElement.querySelector('.fa-chevron-down, .fa-chevron-up');
 
         if (this.expandedCourses.has(courseId)) {
+            // Collapse
             this.expandedCourses.delete(courseId);
+            lessonsList.style.maxHeight = '0';
+            lessonsList.style.opacity = '0';
+            chevronIcon.classList.replace('fa-chevron-up', 'fa-chevron-down');
         } else {
+            // Expand
             this.expandedCourses.add(courseId);
+            lessonsList.style.maxHeight = lessonsList.scrollHeight + 'px';
+            lessonsList.style.opacity = '1';
+            chevronIcon.classList.replace('fa-chevron-down', 'fa-chevron-up');
         }
-
-        // Re-render sidebar
-        const sidebar = document.querySelector('.w-80');
-        sidebar.innerHTML = this.renderSidebar();
-        this.attachEventListeners();
     }
 
     handleLessonSelect(event) {
@@ -399,14 +389,18 @@ export class CoursesPage {
 
         // Update sidebar selection
         document.querySelectorAll('.lesson-item').forEach(item => {
-            item.classList.remove('bg-blue-50');
+            item.classList.remove('bg-gray-100');
             item.classList.add('hover:bg-gray-50');
         });
-        event.currentTarget.classList.add('bg-blue-50');
+        event.currentTarget.classList.add('bg-gray-100');
         event.currentTarget.classList.remove('hover:bg-gray-50');
 
-        // Re-attach event listeners for the new content
-        this.attachEventListeners();
+        // Important: Only attach event listeners for the new video content
+        // Get all checkboxes in the video content area
+        const videoContentCheckboxes = videoContent.querySelectorAll('.lesson-checkbox-main');
+        videoContentCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', this.handleProgressUpdate.bind(this));
+        });
     }
 
     async handleProgressUpdate(event) {
@@ -468,10 +462,17 @@ export class CoursesPage {
             progressBar.style.width = `${progressPercentage}%`;
         }
 
-        // Update header text
-        const headerText = document.querySelector('.text-gray-600');
+        // Update header text (now using id)
+        const headerText = document.getElementById('progress-header-text');
         if (headerText) {
-            headerText.textContent = `${this.courses.length} cursos disponibles • ${allLessons.length} lecciones totales • Progreso: ${progressPercentage}%`;
+            headerText.textContent = `${this.courses.length} cursos disponibles • ${allLessons.length} lecciones totales${this.authService.isAuthenticated() ? ` • Progreso: ${progressPercentage}%` : ''}`;
+        }
+
+        // Re-render the sidebar to update per-course and per-lesson progress numbers
+        const sidebar = document.querySelector('#sidebar');
+        if (sidebar) {
+            sidebar.innerHTML = this.renderSidebar();
+            this.attachEventListeners();
         }
     }
 

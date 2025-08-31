@@ -5,43 +5,6 @@ export class ProgressTracker {
     constructor() {
         this.courseService = new CourseService();
     }
-//console.log
-    //video
-    // Render a progress card for a specific program
-    renderProgramProgressCard(programId, lessons, progress) {
-        const progressPercentage = this.courseService.calculateProgramProgress(lessons, progress);
-        const completedLessons = lessons.filter(lesson => {
-            const lessonProgress = progress.find(p => p.lesson_id === lesson.lesson_id);
-            return lessonProgress && lessonProgress.completed;
-        });
-
-        return `
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Progreso General</h3>
-                    <span class="text-2xl font-bold text-blue-600">${progressPercentage}%</span>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
-                    <div class="bg-gradient-to-r from-blue-600 to-green-600 h-3 rounded-full transition-all duration-300" 
-                         style="width: ${progressPercentage}%"></div>
-                </div>
-                
-                <!-- Stats -->
-                <div class="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                        <p class="text-2xl font-bold text-green-600">${completedLessons.length}</p>
-                        <p class="text-sm text-gray-600">Lecciones Completadas</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-blue-600">${lessons.length - completedLessons.length}</p>
-                        <p class="text-sm text-gray-600">Lecciones Pendientes</p>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
 
     // Render a compact progress indicator
     renderCompactProgress(lessons, progress) {
@@ -55,7 +18,7 @@ export class ProgressTracker {
                         <span class="font-semibold text-gray-900">${progressPercentage}%</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                        <div class="bg-cyan-600 h-2 rounded-full transition-all duration-300" 
                              style="width: ${progressPercentage}%"></div>
                     </div>
                 </div>
@@ -118,7 +81,7 @@ export class ProgressTracker {
                 <h4 class="text-sm font-semibold text-gray-700 mb-3">Logros Obtenidos</h4>
                 <div class="flex flex-wrap gap-2">
                     ${badges.map(badge => `
-                        <div class="bg-${badge.color}-100 text-${badge.color}-800 px-3 py-1 rounded-full text-xs font-semibold flex items-center"
+                        <div class="achievement-badge bg-${badge.color}-100 text-${badge.color}-800 px-3 py-1 rounded-full text-xs font-semibold flex items-center"
                              title="${badge.description}">
                             <i class="fa-solid ${badge.icon} mr-1"></i>
                             ${badge.name}

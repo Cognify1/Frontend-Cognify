@@ -47,11 +47,9 @@ export class ProgramService extends ApiService {
             const response = await this.get('/enrollments');
 
             // Filter enrollments by current user - ESTA ES LA SOLUCIÓN CLAVE
-            const userEnrollments = (response.data || []).filter(enrollment =>
+            return (response.data || []).filter(enrollment =>
                 enrollment.user_id === currentUser.user_id
             );
-
-            return userEnrollments;
         } catch (error) {
             console.error('ProgramService: Error fetching enrollments:', error);
 

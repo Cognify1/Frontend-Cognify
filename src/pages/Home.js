@@ -29,7 +29,7 @@ export class HomePage {
 
                     <!-- Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:border-white/60">
+                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:-translate-y-2  transition-transform duration-300 ease-in-out hover:border-white/60">
                             <div class="bg-blue-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <i class="fa-solid fa-code text-white text-2xl"></i>
                             </div>
@@ -39,7 +39,7 @@ export class HomePage {
                             </p>
                         </div>
 
-                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:border-white/60">
+                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:-translate-y-2 transition-transform duration-300 ease-in-out hover:border-white/60">
                             <div class="bg-green-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <i class="fa-solid fa-brain text-white text-2xl"></i>
                             </div>
@@ -49,7 +49,7 @@ export class HomePage {
                             </p>
                         </div>
 
-                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:border-white/60">
+                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:-translate-y-2 transition-transform duration-300 ease-in-out hover:border-white/60">
                             <div class="bg-purple-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <i class="fa-solid fa-bolt text-white text-2xl"></i>
                             </div>

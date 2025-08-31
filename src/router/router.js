@@ -42,7 +42,6 @@ export class Router {
             '/courses': {
                 component: CoursesPage,
                 requiresAuth: true,
-                requiresEnrollment: true,  // Nueva propiedad
                 title: 'Cursos - Cognify'
             },
             '/terminal': {
@@ -149,11 +148,11 @@ export class Router {
             <div class="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div class="text-center">
                     <div class="mb-8">
-                        <i class="fa-solid fa-cog fa-spin text-6xl text-blue-600"></i>
+                        <i class="fa-solid fa-cog fa-spin text-6xl text-cyan-600"></i>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 mb-4">${featureName}</h1>
                     <p class="text-lg text-gray-600 mb-8">¡Esta función llegará pronto! Estamos trabajando para traerla para ti.</p>
-                    <a href="#/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    <a href="#/" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
                         <i class="fa-solid fa-arrow-left mr-2"></i>Volver al Inicio
                     </a>
                 </div>
@@ -171,7 +170,7 @@ export class Router {
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 mb-4">¡Ups! Algo salió mal</h1>
                     <p class="text-lg text-gray-600 mb-8">${message}</p>
-                    <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    <button onclick="location.reload()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
                         <i class="fa-solid fa-refresh mr-2"></i>Recargar Página
                     </button>
                 </div>
