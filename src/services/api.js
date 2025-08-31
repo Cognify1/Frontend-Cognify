@@ -4,7 +4,7 @@ import axios from "axios";
 
 export class ApiService {
     constructor() {
-        this.baseURL = 'http://localhost:4000/api';
+        this.baseURL = 'https://backend-cognify.onrender.com/api';
         this.setupAxiosDefaults();
     }
 
