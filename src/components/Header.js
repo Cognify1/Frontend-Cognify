@@ -19,7 +19,7 @@ export class HeaderComponent {
                         <!-- Logo -->
                         <div class="flex items-center">
                             <a href="#/" class="flex items-center space-x-2">
-                                <img src="/images/logo.png" alt="Cognify Logo" class="w-16 rounded-full">
+                                <img src="/Frontend-Cognify/images/logo.png" alt="Cognify Logo" class="w-16 rounded-full">
                                 <span class="text-2xl font-bold text-gradient-green">Cognify</span>
                             </a>
                         </div>
@@ -63,7 +63,7 @@ export class HeaderComponent {
                 <div id="mobile-menu" class="fixed inset-y-0 right-0 max-w-sm w-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out xl:hidden">
                     <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                         <div class="flex items-center space-x-2">
-                            <img src="/images/logo.png" alt="Cognify Logo" class="w-8 rounded-full">
+                            <img src="/Frontend-Cognify/images/logo.png" alt="Cognify Logo" class="w-8 rounded-full">
                             <span class="text-xl font-bold text-gradient-green">Cognify</span>
                         </div>
                         <button id="close-mobile-menu" class="p-2 rounded-md text-cyan-700 hover:text-gray-500 hover:bg-gray-100">
