@@ -14,7 +14,7 @@ export class LoginPage {
             <div class="min-h-screen bg-gradient-to-br from-cyan-600 via-sky-400 to-green-500 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <div class="sm:mx-auto sm:w-full sm:max-w-md">
                     <div class="text-center">
-                        <img src="/images/logo.png" alt="Cognify Logo" class="mx-auto h-12 w-12 rounded-full">
+                        <img src="/Frontend-Cognify/images/logo.png" alt="Cognify Logo" class="mx-auto h-12 w-12 rounded-full">
                         <h2 class="mt-6 text-3xl font-bold text-white">Inicia sesión en tu cuenta</h2>
                         <p class="mt-2 text-sm text-white">
                             ¿No tienes una cuenta?
