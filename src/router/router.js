@@ -6,6 +6,7 @@ import {RegisterPage} from '../pages/Register.js';
 import {ProgramsPage} from '../pages/Programs.js';
 import {CoursesPage} from '../pages/Courses.js';
 import {ProgramService} from '../services/programService.js';
+import {ChatPage} from '../pages/Chat.js';
 import Swal from 'sweetalert2';
 
 export class Router {
@@ -51,11 +52,10 @@ export class Router {
                 title: 'Terminal - Cognify'
             },
             '/chat': {
-                component: 'coming-soon',
-                featureName: 'Chat IA',
+                component: ChatPage,
                 requiresAuth: true,
                 title: 'Chat IA - Cognify'
-            }
+            },
         };
     }
 
