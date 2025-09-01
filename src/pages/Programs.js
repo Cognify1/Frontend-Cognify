@@ -132,7 +132,7 @@ export class ProgramsPage {
                     </div>
 
                     <!-- Programs Grid -->
-                    <div class="grid grid-cols-1 justify-items-center gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-8">
                         ${this.renderPrograms()}
                     </div>
 
@@ -236,7 +236,7 @@ export class ProgramsPage {
                     <i class="fa-solid fa-user-graduate mr-2 text-white"></i>
                     Mis Programas Activos
                 </h2>
-                <div class="grid grid-cols-1 justify-items-center gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-6">
                     ${enrolledPrograms.map(program => this.renderEnrolledProgramCard(program)).join('')}
                 </div>
             </div>

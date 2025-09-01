@@ -4,7 +4,7 @@ import axios from "axios";
 
 export class ApiService {
     constructor() {
-        this.baseURL = 'http://localhost:4000/api';
+        this.baseURL = import.meta.env.VITE_API_URL;
         this.setupAxiosDefaults();
     }
 
