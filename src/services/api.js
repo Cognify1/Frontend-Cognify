@@ -4,7 +4,7 @@ import axios from "axios";
 
 export class ApiService {
     constructor() {
-        this.baseURL = 'https://backend-cognify.onrender.com/api';
+        this.baseURL = import.meta.env.VITE_API_URL;
         this.setupAxiosDefaults();
     }
 
