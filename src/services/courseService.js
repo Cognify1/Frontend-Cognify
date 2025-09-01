@@ -23,7 +23,7 @@ export class CourseService extends ApiService {
     // Get all courses for a specific program (keep existing functionality)
     async getCoursesByProgram(programId) {
         try {
-            const response = await this.get(`/courses?program_id=${programId}`);
+            const response = await this.get(`/courses/program/${programId}`);
             return response.data || [];
         } catch (error) {
             console.error('Error fetching courses:', error);
@@ -37,7 +37,7 @@ export class CourseService extends ApiService {
     // Get all lessons for a specific course
     async getLessonsByCourse(courseId) {
         try {
-            const response = await this.get(`/lessons?course_id=${courseId}`);
+            const response = await this.get(`/lessons/course/${courseId}`);
             return response.data || [];
         } catch (error) {
             console.error('CourseService: Error fetching lessons:', error);
@@ -48,10 +48,56 @@ export class CourseService extends ApiService {
         }
     }
 
-    // Get user progress
+    // Get user progress for a specific program
+    async getUserProgressByProgram(programId) {
+        try {
+            const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
+            
+            if (!currentUser.user_id) {
+                return [];
+            }
+
+            // Get all progress for the user
+            const response = await this.get('/progress');
+            const allProgress = response.data || [];
+            
+            // Filter progress by current user
+            const userProgress = allProgress.filter(progress =>
+                progress.user_id === currentUser.user_id
+            );
+
+            // If no program specified, return all user progress
+            if (!programId) {
+                return userProgress;
+            }
+
+            // Get courses for this program
+            const courses = await this.getCoursesByProgram(programId);
+            const courseIds = courses.map(course => course.course_id);
+            
+            // Get lessons for these courses
+            const lessonsPromises = courseIds.map(courseId => 
+                this.getLessonsByCourse(courseId)
+            );
+            const lessonsArrays = await Promise.all(lessonsPromises);
+            const programLessonIds = lessonsArrays.flat().map(lesson => lesson.lesson_id);
+            
+            // Filter progress to only include lessons from this program
+            return userProgress.filter(progress => 
+                programLessonIds.includes(progress.lesson_id)
+            );
+        } catch (error) {
+            console.error('CourseService: Error fetching progress by program:', error);
+            if (error.response?.status === 404) {
+                return []; // No progress yet
+            }
+            return []; // Return empty array instead of throwing
+        }
+    }
+
+    // Get user progress (keep for backward compatibility)
     async getUserProgress() {
         try {
-
             const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
 
             const response = await this.get('/progress');
@@ -107,7 +153,7 @@ export class CourseService extends ApiService {
         }
     }
 
-    // Calculate progress percentage for a program
+    // Calculate progress percentage for a specific program
     calculateProgramProgress(lessons, progressData) {
         if (!lessons || lessons.length === 0) return 0;
 
@@ -117,5 +163,17 @@ export class CourseService extends ApiService {
         });
 
         return Math.round((completedLessons.length / lessons.length) * 100);
+    }
+
+    // Calculate progress percentage for a specific course
+    calculateCourseProgress(courseLessons, progressData) {
+        if (!courseLessons || courseLessons.length === 0) return 0;
+
+        const completedLessons = courseLessons.filter(lesson => {
+            const progress = progressData.find(p => p.lesson_id === lesson.lesson_id);
+            return progress && progress.completed;
+        });
+
+        return Math.round((completedLessons.length / courseLessons.length) * 100);
     }
 }

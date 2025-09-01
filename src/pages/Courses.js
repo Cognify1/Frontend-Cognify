@@ -1,4 +1,4 @@
-// Courses page component - Redesigned for open access
+// Courses page component - Redesigned for program-specific access
 import {CourseService} from '../services/courseService.js';
 import {AuthService} from '../services/auth.js';
 import {DataUtils} from '../utils/data.js';
@@ -10,7 +10,8 @@ export class CoursesPage {
         this.courseService = new CourseService();
         this.authService = new AuthService();
 
-        // Remove programId dependency - we'll load all courses
+        // Add programId dependency for filtering
+        this.programId = null;
         this.courses = [];
         this.lessons = {};  // Store lessons grouped by course_id
         this.progress = [];
@@ -18,7 +19,8 @@ export class CoursesPage {
         this.expandedCourses = new Set();
     }
 
-    async render() {
+    async render(programId = null) {
+        this.programId = programId;
         this.showLoading();
 
         try {
@@ -32,12 +34,17 @@ export class CoursesPage {
 
     async loadData() {
         try {
-            // Load all courses available
-            this.courses = await this.courseService.getAllCourses();
+            // Load courses for specific program if programId is provided
+            if (this.programId) {
+                this.courses = await this.courseService.getCoursesByProgram(this.programId);
+            } else {
+                // Fallback to all courses if no program specified
+                this.courses = await this.courseService.getAllCourses();
+            }
 
-            // Load user progress (optional)
+            // Load user progress for this specific program
             try {
-                this.progress = await this.courseService.getUserProgress();
+                this.progress = await this.courseService.getUserProgressByProgram(this.programId);
             } catch (progressError) {
                 console.warn('CoursesPage: Could not load progress (user may not be logged in):', progressError);
                 this.progress = [];
@@ -106,7 +113,7 @@ export class CoursesPage {
     }
 
     renderContent() {
-        // Calculate overall progress
+        // Calculate overall progress for the current program
         const allLessons = Object.values(this.lessons).flat();
         const progressPercentage = this.courseService.calculateProgramProgress(allLessons, this.progress);
 
@@ -125,7 +132,7 @@ export class CoursesPage {
                                 <div>
                                     <h1 class="text-2xl font-bold text-gray-900">
                                         <i class="fa-solid fa-book mr-3 text-cyan-600"></i>
-                                        Explorar Cursos
+                                        ${this.programId ? 'Cursos del Programa' : 'Explorar Cursos'}
                                     </h1>
                                     <p id="progress-header-text" class="text-gray-600">
                                         ${this.courses.length} cursos disponibles • 
@@ -452,7 +459,7 @@ export class CoursesPage {
     }
 
     updateProgressDisplay() {
-        // Recalculate and update progress bar
+        // Recalculate and update progress bar for the current program
         const allLessons = Object.values(this.lessons).flat();
         const progressPercentage = this.courseService.calculateProgramProgress(allLessons, this.progress);
 
@@ -465,7 +472,8 @@ export class CoursesPage {
         // Update header text (now using id)
         const headerText = document.getElementById('progress-header-text');
         if (headerText) {
-            headerText.textContent = `${this.courses.length} cursos disponibles • ${allLessons.length} lecciones totales${this.authService.isAuthenticated() ? ` • Progreso: ${progressPercentage}%` : ''}`;
+            const programText = this.programId ? ` del programa actual` : '';
+            headerText.textContent = `${this.courses.length} cursos disponibles • ${allLessons.length} lecciones totales${this.authService.isAuthenticated() ? ` • Progreso${programText}: ${progressPercentage}%` : ''}`;
         }
 
         // Re-render the sidebar to update per-course and per-lesson progress numbers
