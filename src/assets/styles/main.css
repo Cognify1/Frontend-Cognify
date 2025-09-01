@@ -1,5 +1,7 @@
 /* Main CSS file for custom styles */
-
+*{
+    font-family: 'Poppins', sans-serif;
+}
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
@@ -130,6 +132,45 @@ textarea:focus {
     margin-bottom: 0.25rem;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
+
+.ai pre {
+    @apply bg-gray-100 rounded-md p-4 my-2 overflow-x-auto;
+}
+
+.ai code {
+    @apply font-mono text-sm;
+}
+
+.ai p {
+    @apply mb-2;
+}
+.typing-cursor {
+    display: inline-block;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    color: #3b82f6;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+#chat {
+    background-image: linear-gradient(to bottom right,
+    rgba(8, 145, 178, 0.05),
+    rgba(14, 165, 233, 0.05),
+    rgba(34, 197, 94, 0.05)
+    );
+}
+
+#chat > div {
+    transition: transform 0.2s ease;
+}
+
+#chat > div:hover {
+    transform: translateY(-1px);
+}
+
 
 /* Responsive layout for sidebar and main content */
 @media (max-width: 768px) {
