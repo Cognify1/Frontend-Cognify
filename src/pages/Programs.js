@@ -60,7 +60,8 @@ export class ProgramsPage {
                 );
                 const lessonsArrays = await Promise.all(lessonsPromises);
                 const lessons = lessonsArrays.flat();
-                const progress = await this.courseService.getUserProgress();
+                // Get progress specifically for this program
+                const progress = await this.courseService.getUserProgressByProgram(enrollment.program_id);
                 const badges = this.progressTracker.getAchievementBadges(lessons, progress);
 
                 return {
@@ -205,7 +206,7 @@ export class ProgramsPage {
                 <div class="flex gap-3">
                     ${isEnrolled ? `
                         <button
-                            onclick="window.location.hash = '#/courses'"
+                            onclick="window.location.hash = '#/courses/program/${program.program_id}'"
                             class="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-lg font-semibold transition-colors duration-200"
                         >
                             <i class="fa-solid fa-play mr-2"></i>Ver Cursos
@@ -266,7 +267,7 @@ export class ProgramsPage {
                 ${badgesContent ? `<div class="mb-4">${badgesContent}</div>` : ''}
 
                 <button
-                    onclick="window.location.hash = '#/courses'"
+                    onclick="window.location.hash = '#/courses/program/${program.program_id}'"
                     class="w-full bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
                 >
                     <i class="fa-solid fa-arrow-right mr-2"></i>Ver Cursos

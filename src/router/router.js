@@ -76,7 +76,20 @@ export class Router {
 
     async handleRouteChange() {
         const hash = window.location.hash.slice(1) || '/';
-        const route = this.routes[hash];
+        let route = this.routes[hash];
+        let params = {};
+
+        // Check for dynamic routes
+        if (!route) {
+            // Check for /courses/program/:programId pattern
+            if (hash.startsWith('/courses/program/')) {
+                const programId = hash.split('/')[3];
+                if (programId && !isNaN(programId)) {
+                    route = this.routes['/courses'];
+                    params = { programId: parseInt(programId) };
+                }
+            }
+        }
 
         if (!route) {
             this.redirect('/');
@@ -120,12 +133,12 @@ export class Router {
         document.title = route.title;
 
         // Render component
-        this.renderRoute(route);
+        this.renderRoute(route, params);
     }
 
-    renderRoute(route) {
+    renderRoute(route, params = {}) {
         try {
-            // Handle pages “próximamente”
+            // Handle pages "próximamente"
             if (route.component === 'coming-soon') {
                 this.renderComingSoon(route.featureName);
                 return;
@@ -134,7 +147,11 @@ export class Router {
             // Handle normal components
             if (typeof route.component === 'function') {
                 const componentInstance = new route.component();
-                componentInstance.render();
+                if (params.programId) {
+                    componentInstance.render(params.programId);
+                } else {
+                    componentInstance.render();
+                }
             }
         } catch (error) {
             console.error('Error al renderizar la ruta:', error);
