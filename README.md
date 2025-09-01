@@ -17,6 +17,7 @@ The Cognify frontend provides an intuitive and engaging experience for learners,
 * **Study Resources:** Curated resources and references to support your learning journey.
 * **Responsive Design:** Fully responsive interface for desktop and mobile devices.
 * **AI Chat:** Improve your coding skills with an AI chat.
+* **Terminal:** Built in terminal to code without the need of local resources.
 
 ---
 
@@ -151,6 +152,7 @@ npm run deploy
 * **Study Resources:** Access curated articles, videos, and external links to deepen your understanding.
 * **AI Chat:** Interact with an AI Chat with GPT-3.5.
 * **Responsive Navigation:** Easy navigation across all devices.
+* **Terminal:** Built in terminal to code in the app.
 
 ---
 
