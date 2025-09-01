@@ -48,7 +48,7 @@ export class Router {
             },
             '/terminal': {
                 component: TerminalPage,
-                requiresAuth: false,
+                requiresAuth: true,
                 title: 'Terminal - Cognify'
             },
             '/chat': {
