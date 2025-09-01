@@ -7,6 +7,7 @@ import {ProgramsPage} from '../pages/Programs.js';
 import {CoursesPage} from '../pages/Courses.js';
 import {ProgramService} from '../services/programService.js';
 import {ChatPage} from '../pages/Chat.js';
+import {TerminalPage} from '../pages/Terminal.js';
 import Swal from 'sweetalert2';
 
 export class Router {
@@ -46,8 +47,7 @@ export class Router {
                 title: 'Cursos - Cognify'
             },
             '/terminal': {
-                component: 'coming-soon',
-                featureName: 'Terminal en Vivo',
+                component: TerminalPage,
                 requiresAuth: true,
                 title: 'Terminal - Cognify'
             },
