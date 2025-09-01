@@ -30,31 +30,40 @@ export class ChatPage {
 
     render() {
         this.container.innerHTML = `
-            <div class="flex flex-col h-screen bg-gray-50">
-                <div class="flex-none p-4 bg-white border-b border-gray-200">
-                    <h1 class="text-2xl font-semibold text-gradient-green text-center">Chat con IA</h1>
-                </div>
-                
-                <div id="chat" class="flex-1 overflow-y-auto py-[5%] px-[15%] bg-gray-50 space-y-4"></div>
-                
-                <div class="flex-none p-4 bg-white border-t border-gray-200">
-                    <div class="max-w-4xl mx-auto flex gap-3">
-                        <input 
-                            id="userInput" 
-                            type="text" 
-                            placeholder="Escribe tu mensaje..."
-                            class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:border-[#2cc1a5] focus:ring-2 focus:ring-[#2cc1a5]/20 transition-all"
-                        />
-                        <button 
-                            id="sendButton" 
-                            class="px-4 py-2 bg-[#2cc1a5] text-white rounded-lg hover:bg-[#25a891] transition-colors"
-                        >
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
+    <div class="flex flex-col min-h-screen bg-gray-50">    
+      
+      <!-- Chat container -->
+      <div 
+        id="chat" 
+        class="flex-1 overflow-y-auto 
+               mt-16 
+               py-3 sm:py-4 md:py-6 
+               px-2 sm:px-6 md:px-[15%] 
+               space-y-3 sm:space-y-4 md:space-y-6 
+               bg-gray-50"
+      ></div>
+      
+      <!-- Input -->
+     <div class="flex-none p-4 sm:p-3 border-t">
+  <div class="max-w-4xl mx-auto flex gap-1 sm:gap-2">
+    <input 
+      id="userInput" 
+      type="text" 
+      placeholder="Escribe tu mensaje..."
+      class="flex-1 px-2 sm:px-3 py-2 sm:py-1.5 rounded-md border focus:outline-none focus:ring-1 text-sm"
+    />
+    <button 
+      id="sendButton" 
+      class="bg-cyan-600 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-sm"
+      style="color: white;"
+    >
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+      </div>
+    </div>
+  `;
 
         this.setupElements();
         this.setupEventListeners();
@@ -63,7 +72,7 @@ export class ChatPage {
     appendUserMessage(message) {
         this.chatContainer.innerHTML += `
             <div class="flex justify-end">
-                <div class="bg-[#2cc1a5] text-white rounded-lg px-4 py-2 max-w-[80%] shadow-sm">
+                <div class="bg-[white] text-black rounded-lg px-4 py-2 my-4 max-w-[80%] shadow-sm">
                     ${this.escapeHtml(message)}
                 </div>
             </div>
@@ -72,28 +81,24 @@ export class ChatPage {
     }
 
     appendAIMessage(content) {
-        // Crear el contenedor del mensaje
         const messageDiv = document.createElement('div');
         messageDiv.className = 'flex justify-start';
         messageDiv.innerHTML = `
-            <div class="bg-white rounded-lg px-4 py-2 max-w-[80%] shadow-sm ai-message">
-                <span class="typing-text"></span>
-                <span class="typing-cursor">▋</span>
-            </div>
-        `;
+        <div class="bg-white rounded-lg px-4 py-2 max-w-[80%] shadow-sm ai">
+            <span class="typing-text"></span>
+            <span class="typing-cursor">▋</span>
+        </div>
+    `;
         this.chatContainer.appendChild(messageDiv);
         this.scrollToBottom();
 
-        // Obtener el elemento donde se escribirá el texto
         const textElement = messageDiv.querySelector('.typing-text');
         const cursorElement = messageDiv.querySelector('.typing-cursor');
 
-        // Procesar el contenido y convertir markdown
-        const formattedContent = this.formatMarkdown(content);
-
-        // Iniciar la animación de escritura
-        this.typeText(formattedContent, textElement, cursorElement);
+        // Animamos usando el markdown crudo (sin Prism todavía)
+        this.typeText(content, textElement, cursorElement);
     }
+
 
     formatMarkdown(content) {
         // Primero escapamos las etiquetas code con una marca temporal
@@ -116,44 +121,30 @@ export class ChatPage {
     }
 
 
-    async typeText(text, element, cursor, delay = 10) {
+    async typeText(rawContent, element, cursor, delay = 15) {
         this.isTyping = true;
         this.disableInput();
 
-        const formattedContent = this.formatMarkdown(text);
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = formattedContent;
+        element.innerHTML = "";
 
-        element.innerHTML = '';
-
-        // Procesar cada nodo hijo
-        for (let node of tempDiv.childNodes) {
+        for (let char of rawContent) {
             if (!this.isTyping) return;
-
-            if (node.nodeType === Node.TEXT_NODE) {
-                // Para texto normal
-                for (let char of node.textContent) {
-                    if (!this.isTyping) return;
-                    element.innerHTML += char;
-                    this.scrollToBottom();
-                    await this.sleep(delay);
-                }
-            } else if (node.nodeName === 'PRE') {
-                // Para bloques de código
-                element.appendChild(node.cloneNode(true));
-                const codeBlock = element.querySelector('pre code:last-child');
-                if (codeBlock) {
-                    Prism.highlightElement(codeBlock);
-                }
-                await this.sleep(delay * 5);
-            } else {
-                // Para otros elementos HTML
-                element.appendChild(node.cloneNode(true));
-                await this.sleep(delay);
-            }
+            element.innerHTML += this.escapeHtml(char);
+            this.scrollToBottom();
+            await this.sleep(delay);
         }
 
-        cursor.style.display = 'none';
+        // Al terminar: reemplazar texto plano por el HTML procesado
+        const formatted = this.formatMarkdown(rawContent);
+        element.innerHTML = formatted;
+
+        // Resaltar TODOS los bloques de código
+        element.querySelectorAll('pre code').forEach(block => {
+            block.classList.add("line-numbers"); // opcional para numeración
+            Prism.highlightElement(block);
+        });
+
+        cursor.style.display = "none";
         this.isTyping = false;
         this.enableInput();
     }
