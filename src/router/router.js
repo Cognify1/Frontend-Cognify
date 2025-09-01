@@ -8,6 +8,8 @@ import {CoursesPage} from '../pages/Courses.js';
 import {ProgramService} from '../services/programService.js';
 import {ChatPage} from '../pages/Chat.js';
 import {TerminalPage} from '../pages/Terminal.js';
+import {ChallengeListPage} from '../pages/ChallengeListPage.js';
+import {ChallengeDetailPage} from '../pages/ChallengeDetailPage.js';
 import Swal from 'sweetalert2';
 
 export class Router {
@@ -56,6 +58,16 @@ export class Router {
                 requiresAuth: true,
                 title: 'Chat IA - Cognify'
             },
+            '/challenges/program/:programId': {
+                component: ChallengeListPage,
+                requiresAuth: true,
+                title: 'Retos - Cognify'
+            },
+            '/challenge/:challengeId': {
+                component: ChallengeDetailPage,
+                requiresAuth: true,
+                title: 'Detalle del Reto - Cognify'
+            },
         };
     }
 
@@ -86,8 +98,18 @@ export class Router {
                 const programId = hash.split('/')[3];
                 if (programId && !isNaN(programId)) {
                     route = this.routes['/courses'];
-                    params = { programId: parseInt(programId) };
+                    params = {programId: parseInt(programId)};
                 }
+            }
+            if (hash.startsWith('/challenges/program/')) {
+                const programId = hash.split('/')[3];
+                route = this.routes['/challenges/program/:programId'];
+                params = {programId: parseInt(programId)};
+            }
+            if (hash.startsWith('/challenge/')) {
+                const challengeId = hash.split('/')[2].split('?')[0];
+                route = this.routes['/challenge/:challengeId'];
+                params = {challengeId: parseInt(challengeId)};
             }
         }
 
@@ -146,9 +168,13 @@ export class Router {
 
             // Handle normal components
             if (typeof route.component === 'function') {
-                const componentInstance = new route.component();
+                const user = JSON.parse(localStorage.getItem('cognify_user'));
+                const userId = user?.user_id;
+                const componentInstance = new route.component(userId);
                 if (params.programId) {
                     componentInstance.render(params.programId);
+                } else if (params.challengeId) {
+                    componentInstance.render(params.challengeId);
                 } else {
                     componentInstance.render();
                 }
