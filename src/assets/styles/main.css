@@ -144,6 +144,7 @@ textarea:focus {
 .ai p {
     @apply mb-2;
 }
+
 .typing-cursor {
     display: inline-block;
     animation: blink 1s step-end infinite;
@@ -152,23 +153,47 @@ textarea:focus {
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
 }
 #chat {
-    background-image: linear-gradient(to bottom right,
-    rgba(8, 145, 178, 0.05),
-    rgba(14, 165, 233, 0.05),
-    rgba(34, 197, 94, 0.05)
+    background: linear-gradient(
+            to bottom right,
+            rgb(37, 99, 235),   /* blue-600 */
+            rgb(56, 189, 248),  /* sky-400 */
+            rgb(34, 197, 94)    /* green-500 */
     );
+    padding: 2rem 6rem;
+
+}
+/* Mensaje del usuario */
+.user-message {
+    @apply bg-white text-black rounded-lg
+    px-3 sm:px-4 md:px-5
+    py-2 sm:py-3 md:py-4
+    max-w-[85%] sm:max-w-[70%] md:max-w-[60%]
+    shadow-sm text-sm sm:text-base md:text-lg;
 }
 
-#chat > div {
-    transition: transform 0.2s ease;
+/* Mensaje de la IA */
+.ai-message {
+    @apply bg-white rounded-lg
+    px-3 sm:px-4 md:px-5
+    py-2 sm:py-3 md:py-4
+    max-w-[85%] sm:max-w-[70%] md:max-w-[60%]
+    shadow-sm text-sm sm:text-base md:text-lg;
 }
 
-#chat > div:hover {
-    transform: translateY(-1px);
+/* Bloques de código */
+.ai-message pre {
+    @apply bg-gray-900 text-gray-100 rounded-md
+    p-2 sm:p-3 md:p-4
+    my-2 overflow-x-auto
+    text-xs sm:text-sm md:text-base;
 }
 
 
@@ -204,6 +229,11 @@ textarea:focus {
 
     #video-content iframe {
         height: 40vh;
+    }
+    #chat {
+
+        padding: 1.3rem;
+
     }
 }
 
