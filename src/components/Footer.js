@@ -1,5 +1,5 @@
 // Footer component
-export class FooterComponent {
+export class Footer {
     constructor() {
         this.container = document.getElementById('footer-container');
     }

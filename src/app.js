@@ -1,13 +1,13 @@
 // Main application class
 import {Router} from './router/router.js';
 import {HeaderComponent} from './components/Header.js';
-import {FooterComponent} from './components/Footer.js';
+import {Footer} from './components/Footer.js';
 
 export class App {
     constructor() {
         this.router = new Router();
         this.headerComponent = new HeaderComponent();
-        this.footerComponent = new FooterComponent();
+        this.footerComponent = new Footer();
     }
 
     async init() {

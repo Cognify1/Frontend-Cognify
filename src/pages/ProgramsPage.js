@@ -211,6 +211,12 @@ export class ProgramsPage {
                         >
                             <i class="fa-solid fa-play mr-2"></i>Ver Cursos
                         </button>
+                        <button
+                            onclick="window.location.hash = '#/challenges/program/${program.program_id}'"
+                            class="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-lg font-semibold transition-colors duration-200"
+                        >
+                            <i class="fa-solid fa-lightbulb mr-2"></i>Retos
+                        </button>
                     ` : `
                         <button
                             data-program-id="${program.program_id}"
