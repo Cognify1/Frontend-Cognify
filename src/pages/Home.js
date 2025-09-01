@@ -18,7 +18,7 @@ export class HomePage {
 
                         <!-- Title -->
                         <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                            Aprende a <span class="text-gradient-green">Programar</span> con Inteligencia Artificial
+                            <span class="text-gradient-green">Cognify:</span> Aprende, practica y lidera, todo en un solo lugar.
                         </h1>
 
                         <!-- Description -->
