@@ -12,7 +12,7 @@ export class FooterComponent {
                         <!-- Company info -->
                         <div class="col-span-1 md:col-span-2">
                             <div class="flex items-center space-x-2 mb-4">
-                                <img src="/Frontend-Cognify/images/logo.png" alt="Cognify Logo" class="h-12 w-12 rounded-full">
+                                <img src="/images/logo.png" alt="Cognify Logo" class="h-12 w-12 rounded-full">
                                 <span class="text-xl font-bold">Cognify</span>
                             </div>
                             <p class="text-gray-400 mb-4">
