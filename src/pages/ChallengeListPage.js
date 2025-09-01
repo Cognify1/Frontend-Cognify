@@ -9,7 +9,7 @@ export class ChallengeListPage {
     }
 
     async render(programId) {
-        // Checks inscriptions
+        // Check inscriptions
         const enrolled = await this.challengeService.getUserEnrollment(this.userId, programId);
         if (!enrolled) {
             this.container.innerHTML = `

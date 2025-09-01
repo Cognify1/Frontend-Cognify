@@ -8,7 +8,7 @@ export class ChallengeService {
     async getChallengesByProgram(programId) {
         const res = await this.api.get(`/challenges`);
         // Filter by program
-        return res.data.filter(ch => ch.program_id == programId);
+        return res.data.filter(ch => ch.program_id === programId);
     }
 
     async getChallengeById(challengeId) {
