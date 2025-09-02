@@ -118,10 +118,15 @@ export class Router {
             return;
         }
 
-        // Verify auth requirements
-        if (route.requiresAuth && !this.authService.isAuthenticated()) {
-            this.redirect('/login');
-            return;
+        // Verify auth requirements with a small delay to ensure localStorage is ready
+        if (route.requiresAuth) {
+            // Add a small delay to ensure localStorage is fully accessible
+            await new Promise(resolve => setTimeout(resolve, 50));
+            
+            if (!this.authService.isAuthenticated()) {
+                this.redirect('/login');
+                return;
+            }
         }
 
         // Verify guest routes

@@ -9,8 +9,11 @@ export class ChallengeListPage {
     }
 
     async render(programId) {
-        // Check inscriptions
-        const enrolled = await this.challengeService.getUserEnrollment(this.userId, programId);
+        this.showLoading();
+        
+        try {
+            // Check inscriptions
+            const enrolled = await this.challengeService.getUserEnrollment(this.userId, programId);
         if (!enrolled) {
             this.container.innerHTML = `
                 <div class="text-center py-20">
@@ -20,61 +23,87 @@ export class ChallengeListPage {
             return;
         }
 
-        const challenges = await this.challengeService.getChallengesByProgram(programId);
-        
-        // Get completion status for each challenge
-        const challengesWithStatus = await Promise.all(
-            challenges.map(async (challenge) => {
-                try {
-                    const lastSubmission = await this.challengeService.getLastSubmission(challenge.challenge_id, this.userId);
-                    return {
-                        ...challenge,
-                        isCompleted: lastSubmission && lastSubmission.passed
-                    };
-                } catch (error) {
-                    return {
-                        ...challenge,
-                        isCompleted: false
-                    };
-                }
-            })
-        );
+            const challenges = await this.challengeService.getChallengesByProgram(programId);
+            
+            // Get completion status for each challenge
+            const challengesWithStatus = await Promise.all(
+                challenges.map(async (challenge) => {
+                    try {
+                        const lastSubmission = await this.challengeService.getLastSubmission(challenge.challenge_id, this.userId);
+                        return {
+                            ...challenge,
+                            isCompleted: lastSubmission && lastSubmission.passed
+                        };
+                    } catch (error) {
+                        return {
+                            ...challenge,
+                            isCompleted: false
+                        };
+                    }
+                })
+            );
 
-        this.container.innerHTML = `
-            <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 py-12">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
-                    <!-- Header -->
-                    <div class="text-center mb-12">
-                        <h1 class="text-4xl font-bold text-white mb-4">
-                            <i class="fa-solid fa-code mr-3 text-white"></i>
-                            Retos de Programación
-                        </h1>
-                        <p class="text-lg text-white max-w-3xl mx-auto">
-                            Pon a prueba tus habilidades con estos desafíos de programación diseñados para mejorar tu lógica y conocimientos.
-                        </p>
+            this.container.innerHTML = `
+                <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 py-12">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+                        <!-- Header -->
+                        <div class="text-center mb-12">
+                            <h1 class="text-4xl font-bold text-white mb-4">
+                                <i class="fa-solid fa-code mr-3 text-white"></i>
+                                Retos de Programación
+                            </h1>
+                            <p class="text-lg text-white max-w-3xl mx-auto">
+                                Pon a prueba tus habilidades con estos desafíos de programación diseñados para mejorar tu lógica y conocimientos.
+                            </p>
+                        </div>
+
+                        <!-- Challenges Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${challengesWithStatus.map(ch => this.renderChallengeCard(ch, programId)).join('')}
+                        </div>
+
+                        <!-- Back Button -->
+                        <div class="text-center mt-12">
+                            <a href="#/programs" class="inline-flex items-center bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                                <i class="fa-solid fa-arrow-left mr-2"></i>Volver a Programas
+                            </a>
+                        </div>
                     </div>
+                </div>
+            `;
 
-                    <!-- Challenges Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        ${challengesWithStatus.map(ch => this.renderChallengeCard(ch, programId)).join('')}
-                    </div>
-
-                    <!-- Back Button -->
-                    <div class="text-center mt-12">
+            this.container.querySelectorAll('[data-challenge-id]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const challengeId = card.getAttribute('data-challenge-id');
+                    window.location.hash = `/challenge/${challengeId}?program=${programId}`;
+                });
+            });
+        } catch (error) {
+            console.error('Error loading challenges:', error);
+            this.container.innerHTML = `
+                <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 flex items-center justify-center">
+                    <div class="text-center text-white">
+                        <i class="fa-solid fa-exclamation-triangle text-6xl mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-2">Error al cargar los retos</h2>
+                        <p class="mb-6">Hubo un problema al cargar los retos. Por favor, inténtalo de nuevo.</p>
                         <a href="#/programs" class="inline-flex items-center bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
                             <i class="fa-solid fa-arrow-left mr-2"></i>Volver a Programas
                         </a>
                     </div>
                 </div>
+            `;
+        }
+    }
+
+    showLoading() {
+        this.container.innerHTML = `
+            <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 flex items-center justify-center">
+                <div class="text-center">
+                    <div class="animate-spin rounded-full h-14 w-14 border-b-4 border-white mx-auto mb-4"></div>
+                    <p class="text-white text-xl">Cargando retos...</p>
+                </div>
             </div>
         `;
-
-        this.container.querySelectorAll('[data-challenge-id]').forEach(card => {
-            card.addEventListener('click', () => {
-                const challengeId = card.getAttribute('data-challenge-id');
-                window.location.hash = `/challenge/${challengeId}?program=${programId}`;
-            });
-        });
     }
 
     renderChallengeCard(challenge, programId) {

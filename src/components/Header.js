@@ -6,9 +6,15 @@ export class HeaderComponent {
         this.authService = new AuthService();
         this.container = document.getElementById('header-container');
         this.isMobileMenuOpen = false;
+        // Store bound methods to allow proper removal
+        this.boundKeydownHandler = this.handleKeydown.bind(this);
+        this.boundResizeHandler = this.handleResize.bind(this);
     }
 
     render() {
+        // Clean up existing event listeners before re-rendering
+        this.removeEventListeners();
+        
         const user = this.authService.getCurrentUser();
         const isLoggedIn = !!user;
 
@@ -90,7 +96,7 @@ export class HeaderComponent {
                     <i class="fa-solid fa-book-atlas mr-2"></i>Programas
                 </a>
                 <a href="#/terminal" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-lg font-bold transition-colors duration-200">
-                    <i class="fa-solid fa-code mr-2"></i>Terminal
+                    <i class="fa-solid fa-terminal mr-2"></i>Terminal
                 </a>
                 <a href="#/chat" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-lg font-bold transition-colors duration-200">
                     <i class="fa-solid fa-comment mr-2"></i>TutorIA
@@ -133,7 +139,7 @@ export class HeaderComponent {
                 Programas
             </a>
             <a href="#/terminal" class="mobile-menu-link flex items-center px-3 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors duration-200">
-                <i class="fa-solid fa-code mr-3 text-lg"></i>
+                <i class="fa-solid fa-terminal mr-3 text-lg"></i>
                 Terminal en Vivo
             </a>
             <a href="#/chat" class="mobile-menu-link flex items-center px-3 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors duration-200">
@@ -207,19 +213,11 @@ export class HeaderComponent {
             });
         }
 
-        // Close the mobile menu on an escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isMobileMenuOpen) {
-                this.closeMobileMenu();
-            }
-        });
+        // Close the mobile menu on an escape key - use bound method for proper cleanup
+        document.addEventListener('keydown', this.boundKeydownHandler);
 
-        // Close mobile menu on window resize if screen becomes large
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 980 && this.isMobileMenuOpen) { // xl breakpoint
-                this.closeMobileMenu();
-            }
-        });
+        // Close mobile menu on window resize if screen becomes large - use bound method for proper cleanup
+        window.addEventListener('resize', this.boundResizeHandler);
     }
 
     toggleMobileMenu() {
@@ -291,5 +289,24 @@ export class HeaderComponent {
         } catch (error) {
             console.error('Logout error:', error);
         }
+    }
+
+    // Event handler methods for proper cleanup
+    handleKeydown(e) {
+        if (e.key === 'Escape' && this.isMobileMenuOpen) {
+            this.closeMobileMenu();
+        }
+    }
+
+    handleResize() {
+        if (window.innerWidth >= 980 && this.isMobileMenuOpen) { // xl breakpoint
+            this.closeMobileMenu();
+        }
+    }
+
+    // Clean up event listeners to prevent memory leaks
+    removeEventListeners() {
+        document.removeEventListener('keydown', this.boundKeydownHandler);
+        window.removeEventListener('resize', this.boundResizeHandler);
     }
 }

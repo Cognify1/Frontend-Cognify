@@ -63,7 +63,7 @@ export class ChatPage {
                  <i class="fa-solid fa-paper-plane"></i>
                </button>
              </div>
-            <div class="text-xs text-gray-500 text-center">
+            <div class="text-xs text-white text-center">
               Cognify puede cometer errores. Considera verificar información importante.
             </div>
           </div>
@@ -88,7 +88,7 @@ export class ChatPage {
                <i class="fa-solid fa-paper-plane"></i>
              </button>
            </div>
-          <div class="text-xs text-gray-500 text-center">
+          <div class="text-xs text-white text-center">
             Cognify puede cometer errores. Considera verificar información importante.
           </div>
         </div>

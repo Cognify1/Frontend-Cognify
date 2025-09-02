@@ -38,24 +38,14 @@ export class CoursesPage {
             if (this.programId) {
                 this.courses = await this.courseService.getCoursesByProgram(this.programId);
                 
-                // Use simple optimized progress for program-specific view
-                try {
-                    this.progress = await this.courseService.getProgressByProgram(this.programId);
-                } catch (progressError) {
-                    console.warn('CoursesPage: Could not load progress, falling back to legacy method:', progressError);
-                    this.progress = await this.courseService.getUserProgressByProgram(this.programId);
-                }
+                // Use optimized progress for program-specific view
+                this.progress = await this.courseService.getProgressByProgram(this.programId);
             } else {
                 // Fallback to all courses if no program specified
                 this.courses = await this.courseService.getAllCourses();
                 
-                // Load user progress (legacy method for non-program view)
-                try {
-                    this.progress = await this.courseService.getUserProgress();
-                } catch (progressError) {
-                    console.warn('CoursesPage: Could not load progress (user may not be logged in):', progressError);
-                    this.progress = [];
-                }
+                // Load user progress for general view
+                this.progress = await this.courseService.getUserProgress();
             }
 
             // Only load lessons if we have courses
@@ -123,6 +113,9 @@ export class CoursesPage {
     }
 
     renderContent() {
+        // Clean up existing event listeners before re-rendering to prevent duplicates
+        this.removeEventListeners();
+        
         // Calculate overall progress for the current program
         const allLessons = Object.values(this.lessons).flat();
         const progressPercentage = this.courseService.calculateProgramProgress(allLessons, this.progress);
@@ -304,19 +297,29 @@ export class CoursesPage {
     }
 
     renderVideoContent(lesson) {
+        // Extract YouTube video ID from URL
+        const videoId = this.extractYouTubeVideoId(lesson.video_url);
+        
         return `
             <div class="max-w-4xl mx-auto">
                 <!-- Video Player -->
                 <div class="bg-black rounded-lg overflow-hidden shadow-lg mb-6">
                     <div class="aspect-w-16 aspect-h-9">
-                        <iframe 
-                            src="${lesson.video_url}" 
-                            title="${lesson.title}"
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen
-                            class="w-full h-96"
-                        ></iframe>
+                                                 ${videoId ? `
+                             <div id="youtube-player-${lesson.lesson_id}" class="w-full h-96"></div>
+                         ` : `
+                             <div class="w-full h-96 bg-gray-800 flex items-center justify-center rounded-lg">
+                                 <div class="text-center text-white">
+                                     <i class="fa-solid fa-video-slash text-4xl mb-3 text-gray-400"></i>
+                                     <h3 class="text-lg font-semibold mb-2">Video no disponible</h3>
+                                     <p class="text-sm text-gray-300 mb-3">No se pudo cargar el video de esta lección</p>
+                                     <div class="text-xs text-gray-400">
+                                         <p>• Verifica que la URL del video sea válida</p>
+                                         <p>• Asegúrate de que sea un enlace de YouTube</p>
+                                     </div>
+                                 </div>
+                             </div>
+                         `}
                     </div>
                 </div>
 
@@ -346,6 +349,37 @@ export class CoursesPage {
                                     <span class="text-sm font-medium text-gray-700">Marcar como completada</span>
                                 </label>
                             </div>
+                                                         ${this.extractYouTubeVideoId(lesson.video_url) ? `
+                                 <div class="mt-3 p-3 bg-cyan-50 border border-cyan-200 rounded-lg">
+                                     <div class="flex items-center text-cyan-800">
+                                         <i class="fa-solid fa-info-circle mr-2"></i>
+                                         <span class="text-sm">
+                                             <strong>Auto-completado:</strong> Esta lección se marcará automáticamente como completada cuando veas el video completo.
+                                         </span>
+                                     </div>
+                                 </div>
+                             ` : lesson.video_url ? `
+                                 <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                     <div class="flex items-center text-yellow-800">
+                                         <i class="fa-solid fa-exclamation-triangle mr-2"></i>
+                                         <span class="text-sm">
+                                             <strong>Video no compatible:</strong> La URL del video no es compatible con YouTube. 
+                                             <a href="${lesson.video_url}" target="_blank" class="underline hover:text-yellow-900">
+                                                 Ver video externo
+                                             </a>
+                                         </span>
+                                     </div>
+                                 </div>
+                             ` : `
+                                 <div class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                                     <div class="flex items-center text-gray-600">
+                                         <i class="fa-solid fa-info-circle mr-2"></i>
+                                         <span class="text-sm">
+                                             <strong>Sin video:</strong> Esta lección no incluye contenido de video.
+                                         </span>
+                                     </div>
+                                 </div>
+                             `}
                         </div>
                     ` : ''}
                 </div>
@@ -418,6 +452,15 @@ export class CoursesPage {
         videoContentCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', this.handleProgressUpdate.bind(this));
         });
+
+        // Initialize YouTube player if this is a YouTube video
+        const videoId = this.extractYouTubeVideoId(lessonData.video_url);
+        if (videoId) {
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                this.initializeYouTubePlayer(lessonData.lesson_id, videoId);
+            }, 100);
+        }
     }
 
     async handleProgressUpdate(event) {
@@ -429,9 +472,18 @@ export class CoursesPage {
         const lessonId = parseInt(checkbox.dataset.lessonId);
         const completed = checkbox.checked;
 
+        // Prevent multiple rapid clicks - add debounce protection
+        if (checkbox.dataset.updating === 'true') {
+            return; // Already processing this checkbox
+        }
+        
+        // Mark as updating
+        checkbox.dataset.updating = 'true';
+        checkbox.disabled = true;
+
         try {
-            // Update progress on server
-            await this.courseService.updateLessonProgress(lessonId, completed);
+            // Update progress on server - pass existing progress data to avoid unnecessary API calls
+            await this.courseService.updateLessonProgress(lessonId, completed, this.progress);
 
             // Update local progress
             const existingProgress = this.progress.find(p => p.lesson_id === lessonId);
@@ -465,6 +517,10 @@ export class CoursesPage {
             // Revert checkbox state
             checkbox.checked = !completed;
             await this.showProgressFeedback('No se pudo actualizar el progreso', 'error');
+        } finally {
+            // Always clean up the updating state
+            checkbox.dataset.updating = 'false';
+            checkbox.disabled = false;
         }
     }
 
@@ -507,5 +563,197 @@ export class CoursesPage {
             icon: type,
             title: message
         });
+    }
+
+    // Clean up event listeners to prevent duplicates and memory leaks
+    removeEventListeners() {
+        // Clean up YouTube players to prevent memory leaks
+        if (this.youtubePlayers) {
+            Object.values(this.youtubePlayers).forEach(player => {
+                if (player && typeof player.destroy === 'function') {
+                    player.destroy();
+                }
+            });
+            this.youtubePlayers = {};
+        }
+
+        // Remove event listeners from existing elements before re-rendering
+        const existingToggles = document.querySelectorAll('.course-toggle');
+        existingToggles.forEach(toggle => {
+            const newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+        });
+
+        const existingItems = document.querySelectorAll('.lesson-item');
+        existingItems.forEach(item => {
+            const newItem = item.cloneNode(true);
+            item.parentNode.replaceChild(newItem, item);
+        });
+
+        const existingCheckboxes = document.querySelectorAll('.lesson-checkbox, .lesson-checkbox-main');
+        existingCheckboxes.forEach(checkbox => {
+            const newCheckbox = checkbox.cloneNode(true);
+            checkbox.parentNode.replaceChild(newCheckbox, checkbox);
+        });
+    }
+
+    // Extract YouTube video ID from various YouTube URL formats
+    extractYouTubeVideoId(url) {
+        if (!url) return null;
+        
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+            /youtube\.com\/v\/([^&\n?#]+)/,
+            /youtube\.com\/watch\?.*&v=([^&\n?#]+)/
+        ];
+        
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match) return match[1];
+        }
+        
+        return null;
+    }
+
+    // Initialize YouTube Player for a specific lesson
+    initializeYouTubePlayer(lessonId, videoId) {
+        // Check if YouTube API is loaded
+        if (typeof YT === 'undefined' || !YT.Player) {
+            // Load YouTube API if not already loaded
+            this.loadYouTubeAPI().then(() => {
+                this.createYouTubePlayer(lessonId, videoId);
+            });
+        } else {
+            this.createYouTubePlayer(lessonId, videoId);
+        }
+    }
+
+    // Load YouTube API
+    loadYouTubeAPI() {
+        return new Promise((resolve) => {
+            if (window.YT) {
+                resolve();
+                return;
+            }
+
+            // Create script tag for YouTube API
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            // Set up callback for when API is ready
+            window.onYouTubeIframeAPIReady = () => {
+                resolve();
+            };
+        });
+    }
+
+    // Create YouTube Player instance
+    createYouTubePlayer(lessonId, videoId) {
+        const playerElement = document.getElementById(`youtube-player-${lessonId}`);
+        if (!playerElement) return;
+
+        // Destroy existing player if it exists
+        if (this.youtubePlayers && this.youtubePlayers[lessonId]) {
+            this.youtubePlayers[lessonId].destroy();
+        }
+
+        // Initialize players object if it doesn't exist
+        if (!this.youtubePlayers) {
+            this.youtubePlayers = {};
+        }
+
+        // Create new player
+        this.youtubePlayers[lessonId] = new YT.Player(`youtube-player-${lessonId}`, {
+            height: '384',
+            width: '100%',
+            videoId: videoId,
+            playerVars: {
+                'playsinline': 1,
+                'rel': 0,
+                'modestbranding': 1
+            },
+            events: {
+                'onStateChange': (event) => this.onPlayerStateChange(event, lessonId)
+            }
+        });
+    }
+
+    // Handle YouTube player state changes
+    onPlayerStateChange(event, lessonId) {
+        const playerElement = document.getElementById(`youtube-player-${lessonId}`);
+        if (!playerElement) return;
+
+        // YT.PlayerState.PLAYING = 1, YT.PlayerState.ENDED = 0
+        if (event.data === 1) {
+            // Video started playing - show progress indicator
+            this.showVideoProgressIndicator(lessonId, true);
+        } else if (event.data === 0) {
+            // Video ended - mark lesson as completed
+            this.showVideoProgressIndicator(lessonId, false);
+            this.autoCompleteLesson(lessonId);
+        }
+    }
+
+    // Show/hide video progress indicator
+    showVideoProgressIndicator(lessonId, isPlaying) {
+        const playerElement = document.getElementById(`youtube-player-${lessonId}`);
+        if (!playerElement) return;
+
+        // Remove existing indicator
+        const existingIndicator = playerElement.querySelector('.video-progress-indicator');
+        if (existingIndicator) {
+            existingIndicator.remove();
+        }
+
+        if (isPlaying) {
+            // Add progress indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'video-progress-indicator absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold z-10';
+            indicator.innerHTML = '<i class="fa-solid fa-play mr-1"></i>Reproduciendo...';
+            playerElement.style.position = 'relative';
+            playerElement.appendChild(indicator);
+        }
+    }
+
+    // Automatically mark lesson as completed when video ends
+    async autoCompleteLesson(lessonId) {
+        try {
+            // Check if lesson is not already completed
+            const existingProgress = this.progress.find(p => p.lesson_id === lessonId);
+            if (existingProgress && existingProgress.completed) {
+                return; // Already completed
+            }
+
+            // Update progress on server
+            await this.courseService.updateLessonProgress(lessonId, true, this.progress);
+
+            // Update local progress
+            if (existingProgress) {
+                existingProgress.completed = true;
+            } else {
+                this.progress.push({
+                    lesson_id: lessonId,
+                    completed: true
+                });
+            }
+
+            // Update all checkboxes for this lesson
+            const allCheckboxes = document.querySelectorAll(`[data-lesson-id="${lessonId}"]`);
+            allCheckboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+
+            // Update progress display
+            this.updateProgressDisplay();
+
+            // Show success feedback
+            await this.showProgressFeedback('¡Lección completada!', 'success');
+
+        } catch (error) {
+            console.error('Error auto-completing lesson:', error);
+            await this.showProgressFeedback('No se pudo marcar la lección como completada', 'error');
+        }
     }
 }

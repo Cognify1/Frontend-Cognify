@@ -37,7 +37,7 @@ export class FooterComponent {
                     </div>
 
                     <div class="border-t border-gray-700 pt-8 mt-8 text-center text-white">
-                        <p>&copy; 2024 Cognify. Todos los derechos reservados.</p>
+                        <p>&copy; 2025 Cognify. Todos los derechos reservados.</p>
                     </div>
                 </div>
             </footer>

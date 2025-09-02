@@ -11,18 +11,21 @@ export class ChallengeDetailPage {
     }
 
     async render(challengeId) {
-        const challenge = await this.challengeService.getChallengeById(challengeId);
-        if (!challenge) {
-            this.container.innerHTML = `<div class="text-center py-20 text-white">Reto no encontrado.</div>`;
-            return;
-        }
+        this.showLoading();
+        
+        try {
+            const challenge = await this.challengeService.getChallengeById(challengeId);
+            if (!challenge) {
+                this.container.innerHTML = `<div class="text-center py-20 text-white">Reto no encontrado.</div>`;
+                return;
+            }
 
-        const lastSubmission = await this.challengeService.getLastSubmission(challengeId, this.userId);
-        const passed = lastSubmission && lastSubmission.passed;
+            const lastSubmission = await this.challengeService.getLastSubmission(challengeId, this.userId);
+            const passed = lastSubmission && lastSubmission.passed;
 
-        // Get program ID from URL for back navigation
-        const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
-        const programId = urlParams.get('program');
+            // Get program ID from URL for back navigation
+            const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+            const programId = urlParams.get('program');
 
         this.container.innerHTML = `
             <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 py-2">
@@ -73,15 +76,6 @@ export class ChallengeDetailPage {
                                         <p class="text-yellow-700 text-sm">${challenge.hint}</p>
                                     </div>
                                 ` : ''}
-
-                                ${challenge.solution_url ? `
-                                    <div class="mt-6">
-                                        <a href="${challenge.solution_url}" target="_blank" class="inline-flex items-center text-cyan-600 hover:text-cyan-700 text-sm font-medium">
-                                            <i class="fa-solid fa-external-link-alt mr-1"></i>
-                                            Ver solución de referencia
-                                        </a>
-                                    </div>
-                                ` : ''}
                             </div>
                         </div>
 
@@ -91,7 +85,7 @@ export class ChallengeDetailPage {
                                 <div class="flex items-center justify-between">
                                     <h2 class="text-xl font-semibold text-gray-900">Editor de Código</h2>
                                     <div class="flex items-center space-x-2">
-                                        <i class="fa-solid fa-code text-cyan-500 text-lg"></i>
+                                        <i class="fa-solid fa-terminal text-cyan-500 text-lg"></i>
                                     </div>
                                 </div>
                             </div>
@@ -106,9 +100,9 @@ export class ChallengeDetailPage {
                                             id="solution-code" 
                                             class="w-full h-64 p-4 rounded-lg bg-gray-900 text-green-400 font-mono text-sm border border-gray-300 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all resize-none" 
                                             placeholder="function solve(param1, param2) {
-    // Tu código aquí
-    return resultado;
-}"
+                                                                        // Tu código aquí
+                                                                        return resultado;
+                                                                    }"
                                             spellcheck="false"
                                         >${lastSubmission ? lastSubmission.solution_code || '' : ''}</textarea>
                                         <div class="absolute top-2 right-2">
@@ -151,8 +145,34 @@ export class ChallengeDetailPage {
             </div>
         `;
 
-        // Always allow editing and submitting, even after completion
-        document.getElementById('submit-solution').addEventListener('click', () => this.handleSubmit(challenge));
+            // Always allow editing and submitting, even after completion
+            document.getElementById('submit-solution').addEventListener('click', () => this.handleSubmit(challenge));
+        } catch (error) {
+            console.error('Error loading challenge:', error);
+            this.container.innerHTML = `
+                <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 flex items-center justify-center">
+                    <div class="text-center text-white">
+                        <i class="fa-solid fa-exclamation-triangle text-6xl mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-2">Error al cargar el reto</h2>
+                        <p class="mb-6">Hubo un problema al cargar el reto. Por favor, inténtalo de nuevo.</p>
+                        <a href="#/programs" class="inline-flex items-center bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                            <i class="fa-solid fa-arrow-left mr-2"></i>Volver a Programas
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    showLoading() {
+        this.container.innerHTML = `
+            <div class="min-h-screen bg-gradient-to-br from-blue-600 via-sky-400 to-green-500 flex items-center justify-center">
+                <div class="text-center">
+                    <div class="animate-spin rounded-full h-14 w-14 border-b-4 border-white mx-auto mb-4"></div>
+                    <p class="text-white text-xl">Cargando reto...</p>
+                </div>
+            </div>
+        `;
     }
 
     async handleSubmit(challenge) {
