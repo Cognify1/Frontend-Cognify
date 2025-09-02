@@ -18,7 +18,7 @@ export class HomePage {
 
                         <!-- Title -->
                         <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                            Aprende a <span class="text-gradient-green">Programar</span> con Inteligencia Artificial
+                            <span class="text-gradient-green">Cognify:</span> Aprende, practica y lidera, todo en un solo lugar.
                         </h1>
 
                         <!-- Description -->
@@ -29,35 +29,74 @@ export class HomePage {
 
                     <!-- Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:-translate-y-2  transition-transform duration-300 ease-in-out hover:border-white/60">
-                            <div class="bg-blue-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fa-solid fa-code text-white text-2xl"></i>
+                        <!-- Programs Card -->
+                        <a href="#/programs" class="block perspective-1000 group cursor-pointer">
+                            <div class="relative w-full h-64 transition-transform duration-700 transform-style-preserve-3d group-hover:rotate-y-180">
+                                <!-- Front Face -->
+                                <div class="absolute inset-0 w-full h-full rounded-lg shadow-lg bg-white/10 backdrop-blur-md border-2 border-white/30 backface-hidden flex flex-col items-center justify-center text-center p-8">
+                                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/20">
+                                        <i class="fa-solid fa-book-atlas text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white">Programas</h3>
+                                </div>
+                                <!-- Back Face -->
+                                <div class="absolute inset-0 w-full h-full rounded-lg shadow-lg bg-white/10 backdrop-blur-md border-2 border-white/30 backface-hidden rotate-y-180 flex flex-col items-center justify-center text-center p-8">
+                                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/20">
+                                        <i class="fa-solid fa-book-atlas text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">Programas de Aprendizaje</h3>
+                                    <p class="text-white text-sm">
+                                        Explora programas estructurados diseñados para maximizar tu progreso y minimizar el tiempo de aprendizaje.
+                                    </p>
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-4">Terminal</h3>
-                            <p class="text-white">
-                                Practica código en tiempo real con retroalimentación inmediata y guía de nuestro sistema IA.
-                            </p>
-                        </div>
+                        </a>
 
-                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:-translate-y-2 transition-transform duration-300 ease-in-out hover:border-white/60">
-                            <div class="bg-green-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fa-solid fa-brain text-white text-2xl"></i>
+                        <!-- Terminal Card -->
+                        <a href="#/terminal" class="block perspective-1000 group cursor-pointer">
+                            <div class="relative w-full h-64 transition-transform duration-700 transform-style-preserve-3d group-hover:rotate-y-180">
+                                <!-- Front Face -->
+                                <div class="absolute inset-0 w-full h-full rounded-lg shadow-lg bg-white/10 backdrop-blur-md border-2 border-white/30 backface-hidden flex flex-col items-center justify-center text-center p-8">
+                                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/20">
+                                        <i class="fa-solid fa-terminal text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white">Terminal</h3>
+                                </div>
+                                <!-- Back Face -->
+                                <div class="absolute inset-0 w-full h-full rounded-lg shadow-lg bg-white/10 backdrop-blur-md border-2 border-white/30 backface-hidden rotate-y-180 flex flex-col items-center justify-center text-center p-8">
+                                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/20">
+                                        <i class="fa-solid fa-terminal text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">Terminal Interactivo</h3>
+                                    <p class="text-white text-sm">
+                                        Practica código en tiempo real con retroalimentación inmediata y guía de nuestro sistema IA.
+                                    </p>
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-4">IA Personalizada</h3>
-                            <p class="text-white">
-                                Mentor IA que adapta las lecciones a tu progreso y estilo de aprendizaje para obtener resultados óptimos.
-                            </p>
-                        </div>
+                        </a>
 
-                        <div class="rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:-translate-y-2 transition-transform duration-300 ease-in-out hover:border-white/60">
-                            <div class="bg-purple-0 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fa-solid fa-bolt text-white text-2xl"></i>
+                        <!-- Chat IA Card -->
+                        <a href="#/chat" class="block perspective-1000 group cursor-pointer">
+                            <div class="relative w-full h-64 transition-transform duration-700 transform-style-preserve-3d group-hover:rotate-y-180">
+                                <!-- Front Face -->
+                                <div class="absolute inset-0 w-full h-full rounded-lg shadow-lg bg-white/10 backdrop-blur-md border-2 border-white/30 backface-hidden flex flex-col items-center justify-center text-center p-8">
+                                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/20">
+                                        <i class="fa-solid fa-comment text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white">TutorIA</h3>
+                                </div>
+                                <!-- Back Face -->
+                                <div class="absolute inset-0 w-full h-full rounded-lg shadow-lg bg-white/10 backdrop-blur-md border-2 border-white/30 backface-hidden rotate-y-180 flex flex-col items-center justify-center text-center p-8">
+                                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/20">
+                                        <i class="fa-solid fa-comment text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">IA Personalizada</h3>
+                                    <p class="text-white text-sm">
+                                        Mentor IA que adapta las respuestas a tu nivel de conocimiento para obtener resultados óptimos.
+                                    </p>
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-4">Aprendizaje Rápido</h3>
-                            <p class="text-white">
-                                Conceptos estructurados diseñados para maximizar tu progreso y minimizar el tiempo de aprendizaje.
-                            </p>
-                        </div>
+                        </a>
                     </div>
 
                 </section>

@@ -43,7 +43,7 @@ export class ProgramsPage {
                 this.enrollments = [];
             }
 
-            // Only load progress data if user has enrollments
+            // Only load progress data if the user has enrollments
             if (this.enrollments.length > 0) {
                 await this.loadProgressData();
             }
@@ -60,7 +60,7 @@ export class ProgramsPage {
                 // Get ALL lessons for this program with progress status (single optimized request)
                 const progress = await this.courseService.getProgressByProgram(enrollment.program_id);
                 
-                // Calculate badges using optimized method (works with all lessons now)
+                // Calculate badges using an optimized method (works with all lessons now)
                 const badges = this.progressTracker.getAchievementBadgesFromProgress(progress);
                 
                 return {
@@ -177,7 +177,7 @@ export class ProgramsPage {
         return `
         <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
             <!-- Card Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-green-600 p-6">
+            <div class="bg-gradient-to-r from-cyan-600 to-green-600 p-6">
                 <div class="flex items-center justify-between">
                     <div class="bg-white/20 rounded-full p-3">
                         <i class="fa-solid fa-graduation-cap text-2xl text-white"></i>
@@ -187,7 +187,7 @@ export class ProgramsPage {
                             <i class="fa-solid fa-check mr-1"></i>Inscrito
                         </span>
                     ` : `
-                        <span class="bg-gray-500/20 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        <span class="bg-gray-400/40 text-white px-3 py-1 rounded-full text-sm font-semibold">
                             <i class="fa-solid fa-plus mr-1"></i>Disponible
                         </span>
                     `}
@@ -249,7 +249,7 @@ export class ProgramsPage {
 
     renderEnrolledProgramCard(program) {
         const progressData = this.programsProgress[program.program_id];
-        let progressContent = '';
+        let progressContent;
         let badgesContent = '';
 
         if (progressData && progressData.progress.length > 0) {

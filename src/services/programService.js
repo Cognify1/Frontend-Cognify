@@ -51,7 +51,7 @@ export class ProgramService extends ApiService {
                 return [];
             }
 
-            // Use optimized endpoint to get enrollments for specific user
+            // Use optimized endpoint to get enrollments for a specific user
             const response = await this.get(`/enrollments/user/${currentUser.user_id}`);
             return response.data || [];
         } catch (error) {

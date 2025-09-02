@@ -347,3 +347,36 @@ textarea:focus {
         overflow-y: auto;
     }
 }
+
+/* 3D Flip Card Animation for Home Page */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+/* Hover effect for the flip cards */
+.group:hover .group-hover\:rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+/* Smooth transition for the flip animation */
+.group .transition-transform {
+    transition: transform 0.7s ease-in-out;
+}
+
+/* Additional styling for the flip cards */
+.group:hover {
+    transform: translateY(-4px);
+    transition: transform 0.3s ease-in-out;
+}

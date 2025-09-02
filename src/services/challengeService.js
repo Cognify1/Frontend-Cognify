@@ -6,7 +6,7 @@ export class ChallengeService {
     }
 
     async getChallengesByProgram(programId) {
-        // Use optimized endpoint to get challenges for specific program only
+        // Use optimized endpoint to get challenges for a specific program only
         const res = await this.api.get(`/challenges/program/${programId}`);
         return res.data || [];
     }
@@ -22,7 +22,7 @@ export class ChallengeService {
             const res = await this.api.get(`/enrollments/user/${userId}`);
             const userEnrollments = res.data || [];
             
-            // Check if user is enrolled in this specific program
+            // Check if a user is enrolled in this specific program
             return userEnrollments.some(enrollment => enrollment.program_id === parseInt(programId));
         } catch (error) {
             console.error('Error checking user enrollment:', error);
