@@ -168,7 +168,70 @@ textarea:focus {
             rgb(34, 197, 94)    /* green-500 */
     );
     padding: 2rem 6rem;
+    min-height: calc(100vh - 200px);
+    transition: all 0.3s ease-in-out;
+}
 
+/* Mantener el degradado siempre */
+#chat.has-messages {
+    background: linear-gradient(
+            to bottom right,
+            rgb(37, 99, 235),   /* blue-600 */
+            rgb(56, 189, 248),  /* sky-400 */
+            rgb(34, 197, 94)    /* green-500 */
+    ) !important;
+}
+
+/* Chat input styles */
+#userInput, #userInputBottom {
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+#userInput:focus, #userInputBottom:focus {
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Button alignment */
+#sendButton, #sendButtonBottom {
+    align-self: flex-end;
+    margin-bottom: 0;
+}
+
+/* Smooth transitions for chat layout */
+#chat {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Input container transitions */
+#inputContainer {
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+#inputContainer.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Centered input animation */
+#centeredInput {
+    transition: all 0.5s ease-in-out;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#centeredInput.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* Centrado inicial del chat */
+#chat:not(.has-messages) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 /* Mensaje del usuario */
 .user-message {
@@ -177,6 +240,7 @@ textarea:focus {
     py-2 sm:py-3 md:py-4
     max-w-[85%] sm:max-w-[70%] md:max-w-[60%]
     shadow-sm text-sm sm:text-base md:text-lg;
+    animation: slideInRight 0.4s ease-out;
 }
 
 /* Mensaje de la IA */
@@ -186,6 +250,30 @@ textarea:focus {
     py-2 sm:py-3 md:py-4
     max-w-[85%] sm:max-w-[70%] md:max-w-[60%]
     shadow-sm text-sm sm:text-base md:text-lg;
+    animation: slideInLeft 0.4s ease-out;
+}
+
+/* Animaciones para mensajes */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Bloques de código */
@@ -231,9 +319,22 @@ textarea:focus {
         height: 40vh;
     }
     #chat {
-
         padding: 1.3rem;
-
+        min-height: calc(100vh - 150px);
+    }
+    
+    #inputContainer {
+        padding: 1rem !important;
+    }
+    
+    #userInput, #userInputBottom {
+        min-height: 50px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    #sendButton, #sendButtonBottom {
+        height: 50px !important;
+        min-height: 50px !important;
     }
 }
 
