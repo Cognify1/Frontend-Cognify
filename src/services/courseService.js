@@ -78,7 +78,7 @@ export class CourseService extends ApiService {
                 return [];
             }
 
-            // Use correct existing backend endpoint to get user progress
+            // Use the correct existing backend endpoint to get user progress
             const response = await this.get(`/progress/user/${currentUser.user_id}`);
 
             return response.data || [];
@@ -151,17 +151,5 @@ export class CourseService extends ApiService {
         });
 
         return Math.round((completedLessons.length / lessons.length) * 100);
-    }
-
-    // Calculate progress percentage for a specific course
-    calculateCourseProgress(courseLessons, progressData) {
-        if (!courseLessons || courseLessons.length === 0) return 0;
-
-        const completedLessons = courseLessons.filter(lesson => {
-            const progress = progressData.find(p => p.lesson_id === lesson.lesson_id);
-            return progress && progress.completed;
-        });
-
-        return Math.round((completedLessons.length / courseLessons.length) * 100);
     }
 }

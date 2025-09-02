@@ -12,7 +12,7 @@ export class ChatService extends ApiService {
     // Send a message to the chat API
     async sendMessage(message) {
         try {
-            // Update sessionId before sending in case user has changed
+            // Update sessionId before sending in case the user has changed
             this.updateSessionId();
 
             const response = await this.post("/chat", {
@@ -41,7 +41,7 @@ export class ChatService extends ApiService {
         return this.sessionId;
     }
 
-    // Method to update sessionId with current user ID
+    // Method to update sessionId with the current user ID
     updateSessionId() {
         const userData = localStorage.getItem('cognify_user');
         if (userData) {

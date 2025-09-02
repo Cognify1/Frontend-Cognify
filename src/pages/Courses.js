@@ -34,17 +34,17 @@ export class CoursesPage {
 
     async loadData() {
         try {
-            // Load courses for specific program if programId is provided
+            // Load courses for a specific program if programId is provided
             if (this.programId) {
                 this.courses = await this.courseService.getCoursesByProgram(this.programId);
                 
-                // Use optimized progress for program-specific view
+                // Use optimized progress for a program-specific view
                 this.progress = await this.courseService.getProgressByProgram(this.programId);
             } else {
                 // Fallback to all courses if no program specified
                 this.courses = await this.courseService.getAllCourses();
                 
-                // Load user progress for general view
+                // Load user progress for a general view
                 this.progress = await this.courseService.getUserProgress();
             }
 
@@ -525,7 +525,7 @@ export class CoursesPage {
     }
 
     updateProgressDisplay() {
-        // Recalculate and update progress bar for the current program
+        // Recalculate and update the progress bar for the current program
         const allLessons = Object.values(this.lessons).flat();
         const progressPercentage = this.courseService.calculateProgramProgress(allLessons, this.progress);
 
@@ -636,7 +636,7 @@ export class CoursesPage {
                 return;
             }
 
-            // Create script tag for YouTube API
+            // Create a script tag for YouTube API
             const tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
             const firstScriptTag = document.getElementsByTagName('script')[0];
@@ -649,22 +649,22 @@ export class CoursesPage {
         });
     }
 
-    // Create YouTube Player instance
+    // Create a YouTube Player instance
     createYouTubePlayer(lessonId, videoId) {
         const playerElement = document.getElementById(`youtube-player-${lessonId}`);
         if (!playerElement) return;
 
-        // Destroy existing player if it exists
+        // Destroy an existing player if it exists
         if (this.youtubePlayers && this.youtubePlayers[lessonId]) {
             this.youtubePlayers[lessonId].destroy();
         }
 
-        // Initialize players object if it doesn't exist
+        // Initialize a player object if it doesn't exist
         if (!this.youtubePlayers) {
             this.youtubePlayers = {};
         }
 
-        // Create new player
+        // Create a new player
         this.youtubePlayers[lessonId] = new YT.Player(`youtube-player-${lessonId}`, {
             height: '384',
             width: '100%',
@@ -675,13 +675,13 @@ export class CoursesPage {
                 'modestbranding': 1
             },
             events: {
-                'onStateChange': (event) => this.onPlayerStateChange(event, lessonId)
+                'onStateChange': async (event) => await this.onPlayerStateChange(event, lessonId)
             }
         });
     }
 
     // Handle YouTube player state changes
-    onPlayerStateChange(event, lessonId) {
+    async onPlayerStateChange(event, lessonId) {
         const playerElement = document.getElementById(`youtube-player-${lessonId}`);
         if (!playerElement) return;
 
@@ -692,7 +692,7 @@ export class CoursesPage {
         } else if (event.data === 0) {
             // Video ended - mark lesson as completed
             this.showVideoProgressIndicator(lessonId, false);
-            this.autoCompleteLesson(lessonId);
+            await this.autoCompleteLesson(lessonId);
         }
     }
 
@@ -701,7 +701,7 @@ export class CoursesPage {
         const playerElement = document.getElementById(`youtube-player-${lessonId}`);
         if (!playerElement) return;
 
-        // Remove existing indicator
+        // Remove the existing indicator
         const existingIndicator = playerElement.querySelector('.video-progress-indicator');
         if (existingIndicator) {
             existingIndicator.remove();
@@ -717,10 +717,10 @@ export class CoursesPage {
         }
     }
 
-    // Automatically mark lesson as completed when video ends
+    // Automatically mark a lesson as completed when the video ends
     async autoCompleteLesson(lessonId) {
         try {
-            // Check if lesson is not already completed
+            // Check if a lesson is not already completed
             const existingProgress = this.progress.find(p => p.lesson_id === lessonId);
             if (existingProgress && existingProgress.completed) {
                 return; // Already completed

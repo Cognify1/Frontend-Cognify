@@ -1,11 +1,6 @@
 // Progress tracker component for displaying user progress
-import {CourseService} from '../services/courseService.js';
 
 export class ProgressTracker {
-    constructor() {
-        this.courseService = new CourseService();
-    }
-
     // Calculate achievement badges based on progress (optimized version)
     getAchievementBadgesFromProgress(progressData) {
         if (!progressData || progressData.length === 0) {

@@ -1,5 +1,4 @@
-
-import { ChatService } from '../services/chatService.js';
+import {ChatService} from '../services/chatService.js';
 import Prism from 'prismjs'
 import {marked} from 'marked';
 // Importar tema y lenguajes
@@ -115,7 +114,7 @@ export class ChatPage {
     setupEventListeners() {
         this.userInput.addEventListener('keydown', (event) => this.handleEnterPress(event));
         this.sendButton.addEventListener('click', () => this.handleSendMessage());
-        this.userInputBottom.addEventListener('keydown', (event) => this.handleEnterPress(event));
+        this.userInputBottom.addEventListener('keydown', async (event) => await this.handleEnterPress(event));
         this.sendButtonBottom.addEventListener('click', () => this.handleSendMessage());
     }
 
@@ -138,7 +137,7 @@ export class ChatPage {
             this.chatContainer.classList.remove('justify-center', 'items-center');
             this.chatContainer.classList.add('justify-start', 'has-messages');
             
-            // Animate centered input out
+            // Animate-centered input out
             this.centeredInput.classList.add('hide');
             
             // Show bottom input container
@@ -173,7 +172,7 @@ export class ChatPage {
         this.scrollToBottom();
     }
 
-    appendAIMessage(content) {
+    async appendAIMessage(content) {
         this.moveInputToBottom();
         const messageDiv = document.createElement('div');
         messageDiv.className = 'flex justify-start w-full';
@@ -190,7 +189,7 @@ export class ChatPage {
         const cursorElement = messageDiv.querySelector('.typing-cursor');
 
         // Animamos usando el markdown crudo (sin Prism todavía)
-        this.typeText(content, textElement, cursorElement);
+        await this.typeText(content, textElement, cursorElement);
     }
 
     formatMarkdown(content) {
@@ -227,8 +226,7 @@ export class ChatPage {
         }
 
         // Al terminar: reemplazar texto plano por el HTML procesado
-        const formatted = this.formatMarkdown(rawContent);
-        element.innerHTML = formatted;
+        element.innerHTML = this.formatMarkdown(rawContent);
 
         // Resaltar TODOS los bloques de código
         element.querySelectorAll('pre code').forEach(block => {
@@ -285,16 +283,16 @@ export class ChatPage {
 
         try {
             const response = await this.chatService.sendMessage(message);
-            this.appendAIMessage(response.content);
+            await this.appendAIMessage(response.content);
         } catch (error) {
             this.appendErrorMessage(error.message);
         }
     }
 
-    handleEnterPress(event) {
+    async handleEnterPress(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            this.handleSendMessage();
+            await this.handleSendMessage();
         }
     }
 

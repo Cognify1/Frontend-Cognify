@@ -186,7 +186,7 @@ export class ChallengeDetailPage {
             const data = await this.challengeService.submitSolution(challenge.challenge_id, this.userId, code);
             this.attempts += 1;
 
-            // Feedback with improved UI
+            // Feedback with an improved UI
             const feedbackDiv = document.getElementById('challenge-feedback');
             const passedTests = data.results.filter(tc => tc.pass).length;
             const totalTests = data.results.length;
@@ -249,7 +249,7 @@ export class ChallengeDetailPage {
             `;
 
             if (data.passed) {
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
                     title: '¡Reto completado!',
                     text: '¡Felicidades! Has pasado todos los casos de prueba. Puedes seguir optimizando tu código.',
@@ -280,15 +280,15 @@ export class ChallengeDetailPage {
 
     renderDifficultyBadge(difficulty) {
         const difficultyColors = {
-            'Fácil': 'bg-green-100 text-green-800 border-green-200',
+            'Facil': 'bg-green-100 text-green-800 border-green-200',
             'Medio': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            'Difícil': 'bg-red-100 text-red-800 border-red-200'
+            'Dificil': 'bg-red-100 text-red-800 border-red-200'
         };
 
         const difficultyIcons = {
-            'Fácil': 'fa-star',
+            'Facil': 'fa-star',
             'Medio': 'fa-star-half-alt',
-            'Difícil': 'fa-fire'
+            'Dificil': 'fa-fire'
         };
 
         const difficultyClass = difficultyColors[difficulty] || 'bg-gray-100 text-gray-800 border-gray-200';

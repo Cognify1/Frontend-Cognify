@@ -1,5 +1,4 @@
 import {ChallengeService} from '../services/challengeService.js';
-import Swal from 'sweetalert2';
 
 export class ChallengeListPage {
     constructor(userId) {
@@ -106,17 +105,17 @@ export class ChallengeListPage {
         `;
     }
 
-    renderChallengeCard(challenge, programId) {
+    renderChallengeCard(challenge) {
         const difficultyColors = {
-            'Fácil': 'bg-green-100 text-green-800 border-green-200',
+            'Facil': 'bg-green-100 text-green-800 border-green-200',
             'Medio': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            'Difícil': 'bg-red-100 text-red-800 border-red-200'
+            'Dificil': 'bg-red-100 text-red-800 border-red-200'
         };
 
         const difficultyIcons = {
-            'Fácil': 'fa-star',
+            'Facil': 'fa-star',
             'Medio': 'fa-star-half-alt',
-            'Difícil': 'fa-fire'
+            'Dificil': 'fa-fire'
         };
 
         const difficultyClass = difficultyColors[challenge.difficulty] || 'bg-gray-100 text-gray-800 border-gray-200';

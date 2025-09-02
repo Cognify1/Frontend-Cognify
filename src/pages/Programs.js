@@ -43,7 +43,7 @@ export class ProgramsPage {
                 this.enrollments = [];
             }
 
-            // Only load progress data if user has enrollments
+            // Only load progress data if the user has enrollments
             if (this.enrollments.length > 0) {
                 await this.loadProgressData();
             }
@@ -60,7 +60,7 @@ export class ProgramsPage {
                 // Get ALL lessons for this program with progress status (single optimized request)
                 const progress = await this.courseService.getProgressByProgram(enrollment.program_id);
                 
-                // Calculate badges using optimized method (works with all lessons now)
+                // Calculate badges using an optimized method (works with all lessons now)
                 const badges = this.progressTracker.getAchievementBadgesFromProgress(progress);
                 
                 return {
@@ -249,7 +249,7 @@ export class ProgramsPage {
 
     renderEnrolledProgramCard(program) {
         const progressData = this.programsProgress[program.program_id];
-        let progressContent = '';
+        let progressContent;
         let badgesContent = '';
 
         if (progressData && progressData.progress.length > 0) {
