@@ -13,6 +13,8 @@ export class ProgramsPage {
         this.programs = [];
         this.enrollments = [];
         this.programsProgress = {}; // Store progress for each program
+        
+
     }
 
     async render() {
@@ -33,15 +35,15 @@ export class ProgramsPage {
             // Load programs first
             this.programs = await this.programService.getAllPrograms();
 
-            // Load enrollments separately with error handling
+            // Load user enrollments only
             try {
                 this.enrollments = await this.programService.getUserEnrollments();
             } catch (enrollmentError) {
                 console.warn('ProgramsPage: Could not load enrollments:', enrollmentError);
-                this.enrollments = []; // Set an empty array if you can't load enrollments
+                this.enrollments = [];
             }
 
-            // Load progress data for enrolled programs
+            // Only load progress data if user has enrollments
             if (this.enrollments.length > 0) {
                 await this.loadProgressData();
             }
@@ -53,20 +55,16 @@ export class ProgramsPage {
 
     async loadProgressData() {
         try {
+            // Optimized approach: get ALL lessons with progress status and calculate badges
             const progressPromises = this.enrollments.map(async (enrollment) => {
-                const courses = await this.courseService.getCoursesByProgram(enrollment.program_id);
-                const lessonsPromises = courses.map(course =>
-                    this.courseService.getLessonsByCourse(course.course_id)
-                );
-                const lessonsArrays = await Promise.all(lessonsPromises);
-                const lessons = lessonsArrays.flat();
-                // Get progress specifically for this program
-                const progress = await this.courseService.getUserProgressByProgram(enrollment.program_id);
-                const badges = this.progressTracker.getAchievementBadges(lessons, progress);
-
+                // Get ALL lessons for this program with progress status (single optimized request)
+                const progress = await this.courseService.getProgressByProgram(enrollment.program_id);
+                
+                // Calculate badges using optimized method (works with all lessons now)
+                const badges = this.progressTracker.getAchievementBadgesFromProgress(progress);
+                
                 return {
                     programId: enrollment.program_id,
-                    lessons: lessons,
                     progress: progress,
                     badges: badges
                 };
@@ -74,10 +72,9 @@ export class ProgramsPage {
 
             const progressResults = await Promise.all(progressPromises);
 
-            // Store progress data
+            // Store progress data with badges
             progressResults.forEach(result => {
                 this.programsProgress[result.programId] = {
-                    lessons: result.lessons,
                     progress: result.progress,
                     badges: result.badges
                 };
@@ -255,29 +252,52 @@ export class ProgramsPage {
         let progressContent = '';
         let badgesContent = '';
 
-        if (progressData) {
-            progressContent = this.progressTracker.renderCompactProgress(
-                progressData.lessons,
-                progressData.progress
-            );
-            badgesContent = this.progressTracker.renderAchievementBadges(progressData.badges);
+        if (progressData && progressData.progress.length > 0) {
+            // Calculate progress for the entire program (all lessons)
+            const completedCount = progressData.progress.filter(p => p.completed === true).length;
+            const totalCount = progressData.progress.length;
+            const percentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+            
+            progressContent = `
+                <div class="mb-4">
+                    <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                        <span>Progreso del Programa</span>
+                        <span>${percentage}% (${completedCount}/${totalCount} lecciones)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-cyan-600 to-green-600 h-2 rounded-full transition-all duration-300" 
+                             style="width: ${percentage}%"></div>
+                    </div>
+                </div>
+            `;
+
+            // Show badges if available
+            if (progressData.badges && progressData.badges.length > 0) {
+                badgesContent = this.progressTracker.renderAchievementBadges(progressData.badges);
+            }
+        } else {
+            progressContent = `
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500">
+                        <i class="fa-solid fa-play mr-1"></i>Listo para comenzar tu aprendizaje
+                    </div>
+                </div>
+            `;
         }
 
         return `
-        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border-l-4 border-cyan-500">
+        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border-l-4 border-cyan-500 cursor-pointer"
+             onclick="window.location.hash = '#/courses/program/${program.program_id}'">
             <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">${program.title}</h3>
-                <p class="text-gray-600 text-sm mb-4">${program.description}</p>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-semibold text-gray-900">${program.title}</h3>
+                    <i class="fa-solid fa-arrow-right text-cyan-600"></i>
+                </div>
+                
+                <p class="text-gray-600 text-sm mb-4 line-clamp-2">${program.description}</p>
 
-                ${progressContent ? `<div class="mb-4">${progressContent}</div>` : ''}
-                ${badgesContent ? `<div class="mb-4">${badgesContent}</div>` : ''}
-
-                <button
-                    onclick="window.location.hash = '#/courses/program/${program.program_id}'"
-                    class="w-full bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
-                >
-                    <i class="fa-solid fa-arrow-right mr-2"></i>Ver Cursos
-                </button>
+                ${progressContent}
+                ${badgesContent}
             </div>
         </div>
     `;
