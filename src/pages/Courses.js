@@ -37,21 +37,31 @@ export class CoursesPage {
             // Load courses for specific program if programId is provided
             if (this.programId) {
                 this.courses = await this.courseService.getCoursesByProgram(this.programId);
+                
+                // Use simple optimized progress for program-specific view
+                try {
+                    this.progress = await this.courseService.getProgressByProgram(this.programId);
+                } catch (progressError) {
+                    console.warn('CoursesPage: Could not load progress, falling back to legacy method:', progressError);
+                    this.progress = await this.courseService.getUserProgressByProgram(this.programId);
+                }
             } else {
                 // Fallback to all courses if no program specified
                 this.courses = await this.courseService.getAllCourses();
+                
+                // Load user progress (legacy method for non-program view)
+                try {
+                    this.progress = await this.courseService.getUserProgress();
+                } catch (progressError) {
+                    console.warn('CoursesPage: Could not load progress (user may not be logged in):', progressError);
+                    this.progress = [];
+                }
             }
 
-            // Load user progress for this specific program
-            try {
-                this.progress = await this.courseService.getUserProgressByProgram(this.programId);
-            } catch (progressError) {
-                console.warn('CoursesPage: Could not load progress (user may not be logged in):', progressError);
-                this.progress = [];
+            // Only load lessons if we have courses
+            if (this.courses.length > 0) {
+                await this.loadAllLessons();
             }
-
-            // Load lessons for each course
-            await this.loadAllLessons();
 
         } catch (error) {
             console.error('CoursesPage: Error in loadData:', error);
@@ -61,7 +71,7 @@ export class CoursesPage {
 
     async loadAllLessons() {
         try {
-            // Load lessons for each course
+            // Simple approach: load lessons for each course
             const lessonsPromises = this.courses.map(async (course) => {
                 const lessons = await this.courseService.getLessonsByCourse(course.course_id);
                 return {
@@ -203,7 +213,7 @@ export class CoursesPage {
         const courseLessons = this.lessons[course.course_id] || [];
         const completedLessons = courseLessons.filter(lesson => {
             const lessonProgress = this.progress.find(p => p.lesson_id === lesson.lesson_id);
-            return lessonProgress && lessonProgress.completed;
+            return lessonProgress && lessonProgress.completed === true;
         });
         const progressPercent = courseLessons.length > 0 ? Math.round((completedLessons.length / courseLessons.length) * 100) : 0;
         const isExpanded = this.expandedCourses.has(course.course_id);

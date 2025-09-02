@@ -6,9 +6,9 @@ export class ChallengeService {
     }
 
     async getChallengesByProgram(programId) {
-        const res = await this.api.get(`/challenges`);
-        // Filter by program
-        return res.data.filter(ch => ch.program_id === programId);
+        // Use optimized endpoint to get challenges for specific program only
+        const res = await this.api.get(`/challenges/program/${programId}`);
+        return res.data || [];
     }
 
     async getChallengeById(challengeId) {
@@ -17,8 +17,17 @@ export class ChallengeService {
     }
 
     async getUserEnrollment(userId, programId) {
-        const res = await this.api.get(`/enrollments?user_id=${userId}&program_id=${programId}`);
-        return res.data && res.data.length > 0;
+        try {
+            // Use optimized endpoint to get user enrollments only
+            const res = await this.api.get(`/enrollments/user/${userId}`);
+            const userEnrollments = res.data || [];
+            
+            // Check if user is enrolled in this specific program
+            return userEnrollments.some(enrollment => enrollment.program_id === parseInt(programId));
+        } catch (error) {
+            console.error('Error checking user enrollment:', error);
+            return false;
+        }
     }
 
     async getLastSubmission(challengeId, userId) {

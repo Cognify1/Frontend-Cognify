@@ -48,7 +48,28 @@ export class CourseService extends ApiService {
         }
     }
 
-    // Get user progress for a specific program
+    // Get progress for a specific program (simple optimized version)
+    async getProgressByProgram(programId) {
+        try {
+            const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
+            
+            if (!currentUser.user_id) {
+                return [];
+            }
+
+            // Simple optimized request to get progress for this program only
+            const response = await this.get(`/progress/user/${currentUser.user_id}/program/${programId}`);
+            return response.data || [];
+        } catch (error) {
+            console.error('CourseService: Error fetching progress by program:', error);
+            if (error.response?.status === 404) {
+                return []; // No progress yet
+            }
+            return [];
+        }
+    }
+
+    // Get user progress for a specific program (legacy method - kept for compatibility)
     async getUserProgressByProgram(programId) {
         try {
             const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
@@ -57,14 +78,9 @@ export class CourseService extends ApiService {
                 return [];
             }
 
-            // Get all progress for the user
-            const response = await this.get('/progress');
-            const allProgress = response.data || [];
-            
-            // Filter progress by current user
-            const userProgress = allProgress.filter(progress =>
-                progress.user_id === currentUser.user_id
-            );
+            // Use existing backend endpoint to get user progress
+            const response = await this.get(`/progress/${currentUser.user_id}`);
+            const userProgress = response.data || [];
 
             // If no program specified, return all user progress
             if (!programId) {
@@ -100,12 +116,14 @@ export class CourseService extends ApiService {
         try {
             const currentUser = JSON.parse(localStorage.getItem('cognify_user') || '{}');
 
-            const response = await this.get('/progress');
+            if (!currentUser.user_id) {
+                return [];
+            }
 
-            // Filter progress by current user if needed
-            return (response.data || []).filter(progress =>
-                progress.user_id === currentUser.user_id
-            );
+            // Use correct existing backend endpoint to get user progress
+            const response = await this.get(`/progress/user/${currentUser.user_id}`);
+
+            return response.data || [];
         } catch (error) {
             console.error('CourseService: Error fetching progress:', error);
             if (error.response?.status === 404) {
@@ -127,6 +145,11 @@ export class CourseService extends ApiService {
             // Obtener todos los progresos del usuario
             const allProgress = await this.getUserProgress();
 
+            // Validar que allProgress sea un array
+            if (!Array.isArray(allProgress)) {
+                throw new Error('Error al obtener el progreso del usuario');
+            }
+
             // Buscar el progreso específico para esta lección
             const existingProgress = allProgress.find(p =>
                 p.lesson_id === lessonId && p.user_id === currentUser.user_id
@@ -146,6 +169,9 @@ export class CourseService extends ApiService {
                     completed: completed
                 });
             }
+
+
+            
             return response.data;
         } catch (error) {
             console.error('Error updating progress:', error);
