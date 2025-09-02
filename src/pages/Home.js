@@ -46,7 +46,7 @@ export class HomePage {
                                     </div>
                                     <h3 class="text-xl font-bold text-white mb-4">Programas de Aprendizaje</h3>
                                     <p class="text-white text-sm">
-                                        Explora programas estructurados diseñados para maximizar tu progreso y minimizar el tiempo de aprendizaje.
+                                        Explora programas de formación estructurados en diferentes tecnologías. Inscríbete, sigue tus lecciones paso a paso y mide tu progreso fácilmente.
                                     </p>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@ export class HomePage {
                                     </div>
                                     <h3 class="text-xl font-bold text-white mb-4">Terminal Interactivo</h3>
                                     <p class="text-white text-sm">
-                                        Practica código en tiempo real con retroalimentación inmediata y guía de nuestro sistema IA.
+                                        Practica en tiempo real con nuestra terminal integrada. Pon a prueba tus conocimientos sin necesidad de instalar nada adicional.
                                     </p>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@ export class HomePage {
                                     </div>
                                     <h3 class="text-xl font-bold text-white mb-4">IA Personalizada</h3>
                                     <p class="text-white text-sm">
-                                        Mentor IA que adapta las respuestas a tu nivel de conocimiento para obtener resultados óptimos.
+                                        Cuenta con un mentor inteligente 24/7. Haz preguntas, recibe explicaciones personalizadas y resuelve tus dudas al instante.
                                     </p>
                                 </div>
                             </div>
