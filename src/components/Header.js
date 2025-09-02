@@ -93,7 +93,7 @@ export class HeaderComponent {
                     <i class="fa-solid fa-code mr-2"></i>Terminal
                 </a>
                 <a href="#/chat" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-lg font-bold transition-colors duration-200">
-                    <i class="fa-solid fa-comment mr-2"></i>Chat IA
+                    <i class="fa-solid fa-comment mr-2"></i>TutorIA
                 </a>
             </nav>
         `;

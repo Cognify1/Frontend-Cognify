@@ -25,12 +25,14 @@ export class ChatPage {
         this.chatService = new ChatService();
         this.chatContainer = null;
         this.userInput = null;
+        this.inputContainer = null;
         this.isTyping = false;
+        this.hasMessages = false;
     }
 
     render() {
         this.container.innerHTML = `
-    <div class="flex flex-col min-h-screen bg-gray-50">    
+    <div class="flex flex-col min-h-screen">    
       
       <!-- Chat container -->
       <div 
@@ -40,39 +42,130 @@ export class ChatPage {
                py-3 sm:py-4 md:py-6 
                px-2 sm:px-6 md:px-[15%] 
                space-y-3 sm:space-y-4 md:space-y-6 
-               bg-gray-50"
-      ></div>
+               flex flex-col justify-center items-center
+               min-h-[calc(100vh-200px)]"
+      >
+        <!-- Centered input for initial state -->
+        <div id="centeredInput" class="w-full max-w-4xl">
+          <div class="flex flex-col gap-3">
+                         <div class="flex gap-2 items-end">
+               <textarea 
+                 id="userInput" 
+                 placeholder="¿En qué puedo ayudarte hoy?"
+                 rows="1"
+                 class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-base resize-none transition-all duration-200 min-h-[60px] max-h-[200px]"
+                 style="font-family: inherit;"
+               ></textarea>
+               <button 
+                 id="sendButton" 
+                 class="bg-cyan-600 hover:bg-cyan-700 px-4 py-3 rounded-xl text-white transition-colors duration-200 flex items-center justify-center min-w-[48px] h-[60px]"
+               >
+                 <i class="fa-solid fa-paper-plane"></i>
+               </button>
+             </div>
+            <div class="text-xs text-gray-500 text-center">
+              Cognify puede cometer errores. Considera verificar información importante.
+            </div>
+          </div>
+        </div>
+      </div>
       
-      <!-- Input -->
-     <div class="flex-none p-4 sm:p-3 border-t">
-  <div class="max-w-4xl mx-auto flex gap-1 sm:gap-2">
-    <input 
-      id="userInput" 
-      type="text" 
-      placeholder="Escribe tu mensaje..."
-      class="flex-1 px-2 sm:px-3 py-2 sm:py-1.5 rounded-md border focus:outline-none focus:ring-1 text-sm"
-    />
-    <button 
-      id="sendButton" 
-      class="bg-cyan-600 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-sm"
-      style="color: white;"
-    >
-      <i class="fa-solid fa-paper-plane"></i>
-    </button>
-  </div>
-</div>
+      <!-- Input Container - Bottom position -->
+      <div id="inputContainer" class="flex-none p-4 sm:p-3 border-t transition-all duration-300 ease-in-out bg-white hidden">
+        <div class="max-w-4xl mx-auto flex flex-col gap-3">
+                     <div class="flex gap-2 items-end">
+             <textarea 
+               id="userInputBottom" 
+               placeholder="¿En qué puedo ayudarte hoy?"
+               rows="1"
+               class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-base resize-none transition-all duration-200 min-h-[60px] max-h-[200px]"
+               style="font-family: inherit;"
+             ></textarea>
+             <button 
+               id="sendButtonBottom" 
+               class="bg-cyan-600 hover:bg-cyan-700 px-4 py-3 rounded-xl text-white transition-colors duration-200 flex items-center justify-center min-w-[48px] h-[60px]"
+             >
+               <i class="fa-solid fa-paper-plane"></i>
+             </button>
+           </div>
+          <div class="text-xs text-gray-500 text-center">
+            Cognify puede cometer errores. Considera verificar información importante.
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   `;
 
         this.setupElements();
         this.setupEventListeners();
+        this.setupAutoResize();
+    }
+
+    setupElements() {
+        this.chatContainer = document.getElementById('chat');
+        this.userInput = document.getElementById('userInput');
+        this.sendButton = document.getElementById('sendButton');
+        this.inputContainer = document.getElementById('inputContainer');
+        this.userInputBottom = document.getElementById('userInputBottom');
+        this.sendButtonBottom = document.getElementById('sendButtonBottom');
+        this.centeredInput = document.getElementById('centeredInput');
+    }
+
+    setupEventListeners() {
+        this.userInput.addEventListener('keydown', (event) => this.handleEnterPress(event));
+        this.sendButton.addEventListener('click', () => this.handleSendMessage());
+        this.userInputBottom.addEventListener('keydown', (event) => this.handleEnterPress(event));
+        this.sendButtonBottom.addEventListener('click', () => this.handleSendMessage());
+    }
+
+    setupAutoResize() {
+        this.userInput.addEventListener('input', () => {
+            // Auto-resize textarea
+            this.userInput.style.height = 'auto';
+            this.userInput.style.height = Math.min(this.userInput.scrollHeight, 200) + 'px';
+        });
+        this.userInputBottom.addEventListener('input', () => {
+            // Auto-resize textarea
+            this.userInputBottom.style.height = 'auto';
+            this.userInputBottom.style.height = Math.min(this.userInputBottom.scrollHeight, 200) + 'px';
+        });
+    }
+
+    moveInputToBottom() {
+        if (!this.hasMessages) {
+            this.hasMessages = true;
+            this.chatContainer.classList.remove('justify-center', 'items-center');
+            this.chatContainer.classList.add('justify-start', 'has-messages');
+            
+            // Animate centered input out
+            this.centeredInput.classList.add('hide');
+            
+            // Show bottom input container
+            this.inputContainer.classList.remove('hidden');
+            
+            // Copy value from centered input to bottom input
+            this.userInputBottom.value = this.userInput.value;
+            this.userInputBottom.style.height = this.userInput.style.height;
+            
+            // Animate bottom input in after a small delay
+            setTimeout(() => {
+                this.inputContainer.classList.add('show');
+                this.userInputBottom.focus();
+            }, 250);
+            
+            // Hide centered input completely after animation
+            setTimeout(() => {
+                this.centeredInput.style.display = 'none';
+            }, 500);
+        }
     }
 
     appendUserMessage(message) {
+        this.moveInputToBottom();
         this.chatContainer.innerHTML += `
-            <div class="flex justify-end">
-                <div class="bg-[white] text-black rounded-lg px-4 py-2 my-4 max-w-[80%] shadow-sm">
+            <div class="flex justify-end w-full">
+                <div class="bg-white text-black rounded-lg px-4 py-3 my-2 max-w-[80%] shadow-sm border user-message">
                     ${this.escapeHtml(message)}
                 </div>
             </div>
@@ -81,10 +174,11 @@ export class ChatPage {
     }
 
     appendAIMessage(content) {
+        this.moveInputToBottom();
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'flex justify-start';
+        messageDiv.className = 'flex justify-start w-full';
         messageDiv.innerHTML = `
-        <div class="bg-white rounded-lg px-4 py-2 max-w-[80%] shadow-sm ai">
+        <div class="bg-white rounded-lg px-4 py-3 max-w-[80%] shadow-sm border ai ai-message">
             <span class="typing-text"></span>
             <span class="typing-cursor">▋</span>
         </div>
@@ -98,7 +192,6 @@ export class ChatPage {
         // Animamos usando el markdown crudo (sin Prism todavía)
         this.typeText(content, textElement, cursorElement);
     }
-
 
     formatMarkdown(content) {
         // Primero escapamos las etiquetas code con una marca temporal
@@ -119,7 +212,6 @@ export class ChatPage {
         // Convertimos el markdown a HTML
         return marked(content);
     }
-
 
     async typeText(rawContent, element, cursor, delay = 15) {
         this.isTyping = true;
@@ -149,21 +241,26 @@ export class ChatPage {
         this.enableInput();
     }
 
-
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     disableInput() {
-        this.userInput.disabled = true;
-        this.sendButton.disabled = true;
-        this.sendButton.classList.add('opacity-50');
+        const currentInput = this.hasMessages ? this.userInputBottom : this.userInput;
+        const currentButton = this.hasMessages ? this.sendButtonBottom : this.sendButton;
+        
+        currentInput.disabled = true;
+        currentButton.disabled = true;
+        currentButton.classList.add('opacity-50');
     }
 
     enableInput() {
-        this.userInput.disabled = false;
-        this.sendButton.disabled = false;
-        this.sendButton.classList.remove('opacity-50');
+        const currentInput = this.hasMessages ? this.userInputBottom : this.userInput;
+        const currentButton = this.hasMessages ? this.sendButtonBottom : this.sendButton;
+        
+        currentInput.disabled = false;
+        currentButton.disabled = false;
+        currentButton.classList.remove('opacity-50');
     }
 
     appendErrorMessage(errorMessage) {
@@ -177,23 +274,14 @@ export class ChatPage {
         this.scrollToBottom();
     }
 
-    setupElements() {
-        this.chatContainer = document.getElementById('chat');
-        this.userInput = document.getElementById('userInput');
-        this.sendButton = document.getElementById('sendButton');
-    }
-
-    setupEventListeners() {
-        this.userInput.addEventListener('keydown', (event) => this.handleEnterPress(event));
-        this.sendButton.addEventListener('click', () => this.handleSendMessage());
-    }
-
     async handleSendMessage() {
-        const message = this.userInput.value;
+        const currentInput = this.hasMessages ? this.userInputBottom : this.userInput;
+        const message = currentInput.value;
         if (!message.trim()) return;
 
         this.appendUserMessage(message);
-        this.userInput.value = '';
+        currentInput.value = '';
+        currentInput.style.height = 'auto'; // Reset height
 
         try {
             const response = await this.chatService.sendMessage(message);
