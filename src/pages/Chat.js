@@ -188,12 +188,12 @@ export class ChatPage {
         const textElement = messageDiv.querySelector('.typing-text');
         const cursorElement = messageDiv.querySelector('.typing-cursor');
 
-        // Animamos usando el markdown crudo (sin Prism todavía)
+        // We animate using the raw markdown (not Prism yet)
         await this.typeText(content, textElement, cursorElement);
     }
 
     formatMarkdown(content) {
-        // Primero escapamos las etiquetas code con una marca temporal
+        // First, escape code tags with a temporary mark
         content = content.replace(/<code class="language-plaintext">(.*?)<\/code>/g, '`$1`');
 
         // Configuramos marked para usar Prism
@@ -208,7 +208,7 @@ export class ChatPage {
             gfm: true
         });
 
-        // Convertimos el markdown a HTML
+        // Convert markdown to HTML
         return marked(content);
     }
 
@@ -225,12 +225,12 @@ export class ChatPage {
             await this.sleep(delay);
         }
 
-        // Al terminar: reemplazar texto plano por el HTML procesado
+        // When finished: replace plain text with processed HTML
         element.innerHTML = this.formatMarkdown(rawContent);
 
-        // Resaltar TODOS los bloques de código
+        // Highlight ALL code blocks
         element.querySelectorAll('pre code').forEach(block => {
-            block.classList.add("line-numbers"); // opcional para numeración
+            block.classList.add("line-numbers"); // optional for line numbers
             Prism.highlightElement(block);
         });
 
