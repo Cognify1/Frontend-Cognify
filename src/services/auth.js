@@ -30,8 +30,10 @@ export class AuthService {
             const response = await this.apiService.post('/auth/login', credentials);
             const userData = response.data;
 
+            console.log('Login response:', userData);
+
             // Validate that we have all required user data
-            if (!userData.user || !userData.user.user_id && !userData.user.id) {
+            if (!userData.user || !userData.user.id) {
                 throw new Error('Respuesta de login inválida: falta ID de usuario');
             }
 
@@ -41,9 +43,9 @@ export class AuthService {
 
             // Save user to localStorage - make sure to save all necessary data
             const userToSave = {
-                user_id: userData.user.user_id || userData.user.id,
+                user_id: userData.user.id,
                 email: userData.user.email,
-                name: userData.user.name || userData.user.username
+                name: userData.user.name
             };
 
             // Validate that we're saving a valid user_id
