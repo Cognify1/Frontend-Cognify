@@ -1,0 +1,382 @@
+/* Main CSS file for custom styles */
+*{
+    font-family: 'Poppins', sans-serif;
+}
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+
+/* Smooth transitions */
+* {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Focus styles for accessibility */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Responsive design helpers */
+@media (max-width: 980px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+@media (min-width: 981px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+/* Text gradients */
+.text-gradient-green {
+    background: linear-gradient(90deg, #083e1c, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+/* Mobile menu specific styles */
+@media (max-width: 979px) {
+    .mobile-menu-link:active {
+        background-color: #f3f4f6;
+        transform: scale(0.98);
+    }
+}
+
+/* Lesson item hover effects */
+.lesson-item:hover {
+    transform: translateX(4px);
+    transition: transform 0.2s ease;
+}
+
+/* Course expansion animation */
+.lessons-list {
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* Checkbox custom styling */
+.lesson-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #3b82f6;
+}
+
+.lesson-checkbox:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* Achievement badges */
+.achievement-badge {
+    animation: bounce-in 0.5s ease-out;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Focus states for accessibility */
+.lesson-item:focus,
+.course-toggle:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* --- Courses Sidebar & Lessons List Improvements --- */
+.sidebar {
+    background: #f9fafb;
+    min-height: 0;
+    /* for flexbox children */
+}
+
+.lesson-item {
+    background: #fff;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.ai pre {
+    @apply bg-gray-100 rounded-md p-4 my-2 overflow-x-auto;
+}
+
+.ai code {
+    @apply font-mono text-sm;
+}
+
+.ai p {
+    @apply mb-2;
+}
+
+.typing-cursor {
+    display: inline-block;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    color: #3b82f6;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+#chat {
+    background: linear-gradient(
+            to bottom right,
+            rgb(37, 99, 235),   /* blue-600 */
+            rgb(56, 189, 248),  /* sky-400 */
+            rgb(34, 197, 94)    /* green-500 */
+    );
+    padding: 2rem 6rem;
+    min-height: calc(100vh - 200px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Mantener el degradado siempre */
+#chat.has-messages {
+    background: linear-gradient(
+            to bottom right,
+            rgb(37, 99, 235),   /* blue-600 */
+            rgb(56, 189, 248),  /* sky-400 */
+            rgb(34, 197, 94)    /* green-500 */
+    ) !important;
+}
+
+/* Chat input styles */
+#userInput, #userInputBottom {
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+#userInput:focus, #userInputBottom:focus {
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Button alignment */
+#sendButton, #sendButtonBottom {
+    align-self: flex-end;
+    margin-bottom: 0;
+}
+
+/* Smooth transitions for chat layout */
+#chat {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Input container transitions */
+#inputContainer {
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+#inputContainer.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Centered input animation */
+#centeredInput {
+    transition: all 0.5s ease-in-out;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#centeredInput.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* Centrado inicial del chat */
+#chat:not(.has-messages) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Mensaje del usuario */
+.user-message {
+    @apply bg-white text-black rounded-lg
+    px-3 sm:px-4 md:px-5
+    py-2 sm:py-3 md:py-4
+    max-w-[85%] sm:max-w-[70%] md:max-w-[60%]
+    shadow-sm text-sm sm:text-base md:text-lg;
+    animation: slideInRight 0.4s ease-out;
+}
+
+/* Mensaje de la IA */
+.ai-message {
+    @apply bg-white rounded-lg
+    px-3 sm:px-4 md:px-5
+    py-2 sm:py-3 md:py-4
+    max-w-[85%] sm:max-w-[70%] md:max-w-[60%]
+    shadow-sm text-sm sm:text-base md:text-lg;
+    animation: slideInLeft 0.4s ease-out;
+}
+
+/* Animaciones para mensajes */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Bloques de código */
+.ai-message pre {
+    @apply bg-gray-900 text-gray-100 rounded-md
+    p-2 sm:p-3 md:p-4
+    my-2 overflow-x-auto
+    text-xs sm:text-sm md:text-base;
+}
+
+
+/* Responsive layout for sidebar and main content */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+        min-width: 0;
+        max-width: 100vw;
+        border-right: none !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        position: static !important;
+    }
+
+    .lessons-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .flex.md\:flex-row {
+        flex-direction: column !important;
+    }
+
+    .h-screen {
+        height: auto !important;
+        min-height: 100vh;
+    }
+
+    #video-content > div {
+        min-height: 50vh;
+        height: max-content;
+    }
+
+    #video-content iframe {
+        height: 40vh;
+    }
+    #chat {
+        padding: 1.3rem;
+        min-height: calc(100vh - 150px);
+    }
+    
+    #inputContainer {
+        padding: 1rem !important;
+    }
+    
+    #userInput, #userInputBottom {
+        min-height: 50px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    #sendButton, #sendButtonBottom {
+        height: 50px !important;
+        min-height: 50px !important;
+    }
+}
+
+/* Make sidebar scrollable on desktop if content overflows */
+@media (min-width: 769px) {
+    .sidebar {
+        position: sticky;
+        top: 5rem;
+        height: calc(100vh - 5rem);
+        overflow-y: auto;
+    }
+}
+
+/* 3D Flip Card Animation for Home Page */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+/* Hover effect for the flip cards */
+.group:hover .group-hover\:rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+/* Smooth transition for the flip animation */
+.group .transition-transform {
+    transition: transform 0.7s ease-in-out;
+}
+
+/* Additional styling for the flip cards */
+.group:hover {
+    transform: translateY(-4px);
+    transition: transform 0.3s ease-in-out;
+}
