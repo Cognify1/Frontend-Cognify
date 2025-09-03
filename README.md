@@ -14,7 +14,6 @@ The Cognify frontend provides an intuitive and engaging experience for learners,
 * **Programs & Courses:** Browse, enroll, and navigate through structured learning programs, courses, and lessons.
 * **Progress Tracking:** Visual indicators and dashboards to monitor your advancement.
 * **Coding Challenges:** Interactive challenge pages with real-time code editing, submission, and instant feedback.
-* **Study Resources:** Curated resources and references to support your learning journey.
 * **Responsive Design:** Fully responsive interface for desktop and mobile devices.
 * **AI Chat:** Improve your coding skills with an AI chat.
 * **Terminal:** Built in terminal to code without the need of local resources.
@@ -96,7 +95,7 @@ npm install
 Create a `.env` file in the root directory (if required) to set the backend API URL:
 
 ```text
-VITE_API_URL=https://backend-cognify.onrender.com
+VITE_API_URL=https://backend-cognify.com/api
 ```
 
 Adjust the variable name and value according to your setup.
@@ -149,7 +148,6 @@ npm run deploy
 * **Home Page:** Welcome users and provide quick access to programs and challenges.
 * **Programs & Courses:** Browse all available programs, view course details, and enroll.
 * **Challenges Page:** Solve coding challenges with an interactive code editor and real-time feedback.
-* **Study Resources:** Access curated articles, videos, and external links to deepen your understanding.
 * **AI Chat:** Interact with an AI Chat with GPT-3.5.
 * **Responsive Navigation:** Easy navigation across all devices.
 * **Terminal:** Built in terminal to code in the app.
