@@ -43,8 +43,7 @@ export class AuthService {
             const userToSave = {
                 user_id: userData.user.user_id || userData.user.id,
                 email: userData.user.email,
-                name: userData.user.name || userData.user.username,
-                token: userData.token
+                name: userData.user.name || userData.user.username
             };
 
             // Validate that we're saving a valid user_id
